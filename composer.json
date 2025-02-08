@@ -1,0 +1,31 @@
+{
+    "name": "uri-interop/interface",
+    "description": "",
+    "keywords": [],
+    "license": "MIT",
+    "homepage": "https://github.com/uri-interop/interface",
+    "authors": [
+        {
+            "name": "Uri-Interop Interface Contributors",
+            "homepage": "https://github.com/uri-interop/interface/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.4"
+    },
+    "autoload": {
+        "psr-4" : {
+            "UriInterop\\Interface\\": "src/"
+        }
+    },
+    "require-dev": {
+        "pds/skeleton": "^1.0",
+        "pds/composer-script-names": "^1.0",
+        "phpunit/phpunit": "^11",
+        "phpstan/phpstan": "^2.0"
+    },
+    "scripts": {
+        "analyze": "./vendor/bin/phpstan",
+        "check": "composer analyze"
+    }
+}
