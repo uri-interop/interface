@@ -245,6 +245,58 @@ When the authority component is offered, the term "authority" is always used.
 
 The ability to modify the authority value *per se* is not present in any project. The projects all opt to modify the sub-components of the authority independently.
 
+## Parsing
+
+### Approaches
+
+These projects use these approaches to parsing URL component values.
+
+|          | parse_url() | RFC 3986 | RFC 3987 | WHATWG-URL | None |
+| -------- | ----------- | -------- | -------- | ---------- | ---- |
+| amphp    | X           |          |          |            |      |
+| aura     | X           |          |          |            |      |
+| ci4      | X           |          |          |            |      |
+| codezero | X           |          |          |            |      |
+| joomla   | X (1)       |          |          |            |      |
+| josan    | X           |          |          |            |      |
+| justking | X           |          |          |            |      |
+| laminas  |             | X        |          |            |      |
+| league   |             | X        | X        |            |      |
+| nette    | X (2)       |          |          |            |      |
+| opis     |             | X        |          |            |      |
+| pear     |             | X        |          |            |      |
+| psr      |             |          |          |            | X    |
+| rowbot   |             |          |          | X          |      |
+| xpforge  |             | X        |          |            |      |
+| zenstr   | X           |          |          |            |      |
+
+1. Joomla handles UTF-8 characters while parsing.
+2. Nette applies rawurldecode() to the host, user, password, and fragment.
+
+### Public Methods
+
+These projects offer a public method to parse URI strings to their component values (often just a constructor):
+
+|          | Parse into component values                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------- |
+| amphp    | `Uri::__construct(string $uri)`                                                                      |
+| aura     | `UrlFactory::newInstance(string $spec) : Url`                                                        |
+| ci4      | `Uri::__construct(?string $uri = null)`                                                              |
+| codezero | `Uri::setURI(?string $uri = null) : void`                                                            |
+| joomla   | `Uri::__construct(?string $uri = null)`                                                              |
+| josan    | `Url::__construct(?string $url = null)`                                                              |
+| justking | `Uri::fromString(string $uri) : Uri`                                                                 |
+| laminas  | `Uri::parse(string $uri) : Uri`                                                                      |
+| league   | `Uri::new(Stringable\|string $uri = '') : Uri`                                                       |
+| nette    | `Url::__construct(string\|Url\|UrlImmutable\|null $url = null)`                                      |
+| opis     | `Uri::create(string $uri, bool $normalize = false) : ?Uri`                                           |
+| pear     | `Net_URL2::__construct(string $url, array $options = array())`                                       |
+| psr      | `UriFactoryInterface::createUri(string $uri = '') : UriInterface`                                    |
+| rowbot   | `Url::parse(string\|Stringable $url, string\|Stringable\|null $base = null) : ?Url`                  |
+| xpforge  | `Uri::__construct(string\|Creation $base, ?string $relative = null)`                                 |
+| zenstr   | `ParsedUri::new(ParsedUri\|string\|null $what = null) : ParsedUri`                                   |
+
+
 ## Exceptions
 
 The projects throw these PHP _Exception_ types when parsing a URI or validating its components:
