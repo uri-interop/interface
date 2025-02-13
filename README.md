@@ -3,7 +3,7 @@
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat-square)](https://github.com/php-pds/skeleton)
 [![PDS Composer Script Names](https://img.shields.io/badge/pds-composer--script--names-blue?style=flat-square)](https://github.com/php-pds/composer-script-names)
 
-The Uri-Interop project publishes an interoperable set of URI interfaces for PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
+The Uri-Interop project publishes a standard set of interoperable URI interfaces for PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
@@ -11,18 +11,18 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines separate interfaces to afford reading and modifying URI components:
+Uri-Interop defines separate interfaces to afford reading and modifying URI component values:
 
-- [_Uri_](#uri) affords reading of the URI component values and composing them into a string.
+- [_Uri_](#uri) affords reading of the URI component values and recomposing them into a string.
 - [_MutableUri_](#mutableuri) extends _Uri_ to afford direct modification of component values.
 - [_ImmutableUri_](#immutableuri) extends _Uri_ to afford immutable modification of component values.
 
-It also defines these marker interfaces to codify expectations around component values and composition:
+It also defines these marker interfaces to codify expectations around component values and string recomposition:
 
-- [_Rfc3986Uri_](#rfc3986uri) marks a _Uri_ to indicate its component values are the result of [RFC 3986][] parsing, and that its string representation will be [RFC 3986][] compliant.
-- [_Rfc3987Uri_](#rfc3987uri) marks a _Uri_ to indicate its component values are the result of [RFC 3987][] parsing, and that its string representation will be [RFC 3987][] compliant.
+- [_Rfc3986Uri_](#rfc3986uri) marks a _Uri_ to indicate it conforms to [RFC 3986][].
+- [_Rfc3987Uri_](#rfc3987uri) marks a _Uri_ to indicate it conforms to [RFC 3987][].
 - [_Url_](#url) marks a _Uri_ to indicate a scheme is required.
-- [_WhatwgUrl_](#whatwgurl) marks a _Url_ to indicate its component values are the result of [WHATWG-URL][] parsing, and that its string representation will be [WHATWG-URL][] compliant.
+- [_WhatwgUrl_](#whatwgurl) marks a _Url_ to indicate it conforms to [WHATWG-URL][].
 
 Uri-Interop defines factory and parser interfaces:
 
@@ -45,7 +45,7 @@ The _Uri_ interface affords readability of URI components using these properties
     - The password.
 
 - `string $host { get; }`
-    - The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, or `::1`).
+    - The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
 
 - `?int $port { get; }`
     - The port (e.g. `443`).
@@ -69,7 +69,7 @@ The _Uri_ interface affords readability of URI components using these properties
     - The combined `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
 
 - `__toString() : string`
-    - Returns all the components composed into a string.
+    - Recomposes the component values into a full URI string.
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
@@ -79,7 +79,7 @@ Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` property looks more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
-- **Unless specified otherwise, _Uri_ component values are presumed to be derived from [`parse_url()`][].** Implementations MAY be marked with _Rfc3986Uri_, _Rfc3987Uri_, or _WhatwgUri_ to indicate that their component values are derived from a different parsing mechanism.
+- **Unless specified otherwise, _Uri_ implementations are presumed conform to [`parse_url()`][] and related PHP functions.** Implementations MAY be marked with _Rfc3986Uri_, _Rfc3987Uri_, or _WhatwgUri_ to indicate they conform to those specifications instead.
 
 ### _MutableUri_
 
@@ -142,40 +142,34 @@ Notes:
 
 ### _Rfc3986Uri_
 
-The _Rfc3986Uri_ marker interface extends _Uri_ to indicate that the implementation component values were generated from a parser conforming to [RFC 3986][]; it adds no properties or methods.
+The _Rfc3986Uri_ marker interface extends _Uri_; it adds no properties or methods.
 
-Implementation component values MUST be handled according to [RFC 3986][].
-
-Implementation `__toString()` return values MUST be composed according to [RFC 3986][].
+Implementations with this marker interface MUST conform to [RFC 3986][].
 
 ### _Rfc3987Uri_
 
-The _Rfc3987Uri_ marker interface extends _Uri_ to indicate that the implementation component values were generated from a parser conforming to [RFC 3987][]; it adds no properties or methods.
+The _Rfc3987Uri_ marker interface extends _Uri_; it adds no properties or methods.
 
-Implementation component values MUST be handled according to [RFC 3987][].
-
-Implementation `__toString()` return values MUST be composed according to [RFC 3987][].
+Implementations with this marker interface MUST conform to [RFC 3987][].
 
 ### _Url_
 
 The _Url_ marker interface extends _Uri_ to indicate a scheme component must be present; it adds no properties or methods.
 
-Implmentations MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or composed only of whitespace.
+Implmentations with this marker interface MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or consists only of whitespace.
 
 ### _WhatwgUrl_
 
-The _WhatwgUrl_ marker interface extends _Url_ (not _Uri_) to indicate that the implementation component values were generated from a parser conforming to [WHATWG-URL][]; it adds no properties or methods.
+The _WhatwgUrl_ marker interface extends _Url_ (not _Uri_); it adds no properties or methods.
 
-Implementation component values MUST be handled according to [WHATWG-URL][].
-
-Implementation `__toString()` return values MUST be composed according to [WHATWG-URL][].
+Implementations with this marker interface MUST conform to [WHATWG-URL][].
 
 ### _UriFactory_
 
 The _UriFactory_ interface affords creating a new _Uri_ instance from parsed component values:
 
 -
-    ```
+    ```php
     newUri(
         string $scheme = '',
         string $user = '',
@@ -197,9 +191,9 @@ The _UriParser_ interface affords creating a new _Uri_ instance from a URI strin
 
 ## Implementations
 
-Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
+Implementations MAY define additional properties and methods not defined in these interfaces.
 
-Implementations MAY define additional properties and methods not defined in these interfaces; implementations advertised as readonly or immutable MUST make those additional elements deeply readonly or immutable.
+Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
 
 Notes:
 
