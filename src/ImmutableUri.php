@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace UriInterop\Interface;
 
 /**
- * @phpstan-import-type QueryParamsArray from Uri
+ * Implementations MUST keep `$queryParams` and `$query` in sync; if one is
+ * modified, the other MUST be modified accordingly.
+
+ * @phpstan-import-type QueryParamsArray from UriTypeAliases
  */
 interface ImmutableUri extends Uri
 {

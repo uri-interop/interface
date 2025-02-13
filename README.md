@@ -11,65 +11,75 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines separate interfaces to afford reading and modifying the URI components described by [RFC 3896][]:
+Uri-Interop defines separate interfaces to afford reading and modifying URI components:
 
-- [_Uri_](#uri) affords reading of the URI component values, and the URI as a whole.
+- [_Uri_](#uri) affords reading of the URI component values and composing them into a string.
 - [_MutableUri_](#mutableuri) extends _Uri_ to afford direct modification of component values.
 - [_ImmutableUri_](#immutableuri) extends _Uri_ to afford immutable modification of component values.
-- [_UriFactory_](#urifactory) affords creating a new URI instance.
+
+It also defines these marker interfaces to codify expectations around component values and composition:
+
+- [_Rfc3986Uri_](#rfc3986uri) marks a _Uri_ to indicate its component values are the result of [RFC 3986][] parsing, and that its string representation will be [RFC 3986][] compliant.
+- [_Rfc3987Uri_](#rfc3987uri) marks a _Uri_ to indicate its component values are the result of [RFC 3987][] parsing, and that its string representation will be [RFC 3987][] compliant.
+- [_Url_](#url) marks a _Uri_ to indicate a scheme is required.
+- [_WhatwgUrl_](#whatwgurl) marks a _Url_ to indicate its component values are the result of [WHATWG-URL][] parsing, and that its string representation will be [WHATWG-URL][] compliant.
+
+Uri-Interop defines factory and parser interfaces:
+
+- [_UriFactory_](#urifactory) affords creating a new URI instance from URI component values.
+- [_UriParser_](#uriparser) affords creating a new URI instance from a URI string.
+
+Finally, it defines an interface of PHPStan type aliases, _UriTypeAliases_, to aid static analysis.
 
 ### _Uri_
 
 The _Uri_ interface affords readability of URI components using these properties and methods:
 
 - `string $scheme { get; }`
-    - Corresponds to the `scheme` key from [`parse_url()`][].
-
-- `string $host { get; }`
-    - Corresponds to the `host` key from [`parse_url()`][].
-
-- `?int $port { get; }`
-    - Corresponds to the `port` key from [`parse_url()`][].
+    - The scheme (e.g., `https` or `urn`).
 
 - `string $user { get; }`
-    - Corresponds to the `user` key from [`parse_url()`][].
+    - The user name.
 
 - `string $password { get; }`
-    - Corresponds to the `pass` key from [`parse_url()`][].
+    - The password.
+
+- `string $host { get; }`
+    - The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, or `::1`).
+
+- `?int $port { get; }`
+    - The port (e.g. `443`).
 
 - `string $path { get; }`
-    - Corresponds to the `path` key from [`parse_url()`][].
+    - The path (e.g. `/path/to/page.html` or `ietf:rfc:3986`).
 
 - `string $query { get; }`
-    - Corresponds to the `query` key from [`parse_url()`][].
+    - The query string (e.g. `foo=bar&baz=qux`).
 
 - `string $fragment { get; }`
-    - Corresponds to the `fragment` key from [`parse_url()`][].
+    - The fragment.
 
 - `QueryParamsArray $queryParams { get; }`
-    - Corresponds to a decoded form of `$query` (e.g., as if by [`parse_str()`][]).
+    - A decoded form of `$query` (e.g., as if by [`parse_str()`][] or some other decoding mechanism).
 
 - `string $userInfo { get; }`
-    - The combined `$user` and `$password` as specified by <https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1>.
+    - The combined `$user` and `$password` (e.g. as per [RFC 3986][]).
 
 - `string $authority { get; }`
-    - The combined `$userInfo`, `$host`, and `$port` as specified by <https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2>.
+    - The combined `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
 
 - `__toString() : string`
-    - Returns the entire URI specified by <https://datatracker.ietf.org/doc/html/rfc3986/#section-3>.
+    - Returns all the components composed into a string.
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
 Implementations MAY validate component values; the implementation MUST throw _LogicException_ (or an extension thereof) when the component value is invalid.
 
-The _Uri_ interface also defines this custom PHPStan type to aid static analysis:
-
-- `QueryParamsArray: string[]|QueryParamsArray`
-    - Recursively `string[]` to 16 keys deep.
-
 Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` property looks more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
+
+- **Unless specified otherwise, _Uri_ component values are presumed to be derived from [`parse_url()`][].** Implementations MAY be marked with _Rfc3986Uri_, _Rfc3987Uri_, or _WhatwgUri_ to indicate that their component values are derived from a different parsing mechanism.
 
 ### _MutableUri_
 
@@ -130,33 +140,60 @@ Notes:
 
 - **There are no methods for `withUserInfo()` or `withAuthority()`.** Because these are combined from other property values, they are not modified directly.
 
+### _Rfc3986Uri_
+
+The _Rfc3986Uri_ marker interface extends _Uri_ to indicate that the implementation component values were generated from a parser conforming to [RFC 3986][]; it adds no properties or methods.
+
+Implementation component values MUST be handled according to [RFC 3986][].
+
+Implementation `__toString()` return values MUST be composed according to [RFC 3986][].
+
+### _Rfc3987Uri_
+
+The _Rfc3987Uri_ marker interface extends _Uri_ to indicate that the implementation component values were generated from a parser conforming to [RFC 3987][]; it adds no properties or methods.
+
+Implementation component values MUST be handled according to [RFC 3987][].
+
+Implementation `__toString()` return values MUST be composed according to [RFC 3987][].
+
+### _Url_
+
+The _Url_ marker interface extends _Uri_ to indicate a scheme component must be present; it adds no properties or methods.
+
+Implmentations MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or composed only of whitespace.
+
+### _WhatwgUrl_
+
+The _WhatwgUrl_ marker interface extends _Url_ (not _Uri_) to indicate that the implementation component values were generated from a parser conforming to [WHATWG-URL][]; it adds no properties or methods.
+
+Implementation component values MUST be handled according to [WHATWG-URL][].
+
+Implementation `__toString()` return values MUST be composed according to [WHATWG-URL][].
+
 ### _UriFactory_
 
-The _UriFactory_ interface affords creating a new _Uri_ instance from various source specifications:
+The _UriFactory_ interface affords creating a new _Uri_ instance from parsed component values:
 
-- `newUri(null|string|Stringable|ParsedUrlArray|Uri $spec = null) : Uri`
-    - When `$spec` is `null`, implementations MUST create and return a new default _Uri_ instance.
-    - When `$spec` is a string or _Stringable_, implementations MUST parse it (e.g. via [`parse_url()`][]) and use those parsed values to create and return a new _Uri_ instance.
-    - When `$spec` is a `ParsedUrlArray`, implementations MUST use those parsed values to create and return a new _Uri_ instance.
-    - When `$spec` is a _Uri_, implementations MUST use its properties to create and return a new _Uri_ instance.
-
-Implementations MUST throw _LogicException_ (or an extension thereof) if the `$spec` is not usable for creating a _Uri_ (e.g., invalid or cannot be parsed).
-
-The _UriFactory_ interface also defines this custom PHPStan type to aid static analysis:
-
-- `ParsedUrlArray` corresponds to the return value of [`parse_url()`][]:
-
+-
     ```
-    array{
-        scheme?: string,
-        port?: int<0, 65535>,
-        user?: string,
-        pass?: string,
-        path?: string,
-        query?: string,
-        fragment?: string
-    }
+    newUri(
+        string $scheme = '',
+        string $user = '',
+        string $password = '',
+        string $host = '',
+        ?int $port = null,
+        string $path = '',
+        string $query = '',
+        string $fragment = '',
+    ) : Uri
     ```
+
+### _UriParser_
+
+The _UriParser_ interface affords creating a new _Uri_ instance from a URI string:
+
+- `parseUri(string|Stringable $uriString) : Uri`
+
 
 ## Implementations
 
@@ -178,7 +215,7 @@ Among the researched projects, `$user` was the more common property name.
 
 ### Why `$password` and not `$pass`?
 
-Among the researched projects, `$password` was the more common property name. (This is the only deviation from the array returned by [`parse_url()`][]; all the other properties end up being the same as the keys in that array.)
+Among the researched projects, `$password` was the more common property name.
 
 ### Why `$userInfo` and not `$userinfo`?
 
@@ -191,5 +228,7 @@ Among the researched projects, most used camel-casing for this property and/or i
 [BCP 14]: https://www.rfc-editor.org/info/bcp14
 [README-RESEARCH.md]: ./README-RESEARCH.md
 [RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119.txt
-[RFC 3896]: https://datatracker.ietf.org/doc/html/rfc3986/
+[RFC 3986]: https://datatracker.ietf.org/doc/html/rfc3986/
+[RFC 3987]: https://datatracker.ietf.org/doc/html/rfc3987/
 [RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174.txt
+[WHATWG-URL]: https://url.spec.whatwg.org/
