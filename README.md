@@ -29,47 +29,47 @@ Uri-Interop defines factory and parser interfaces:
 - [_UriFactory_](#urifactory) affords creating a new URI instance from URI component values.
 - [_UriParser_](#uriparser) affords creating a new URI instance from a URI string.
 
-Finally, it defines an interface of PHPStan type aliases, _UriTypeAliases_, to aid static analysis.
+Finally, it defines an interface of PHPStan type aliases, [_UriTypeAliases_](#uritypealiases), to aid static analysis.
 
 ### _Uri_
 
 The _Uri_ interface affords readability of URI components using these properties and methods:
 
 - `string $scheme { get; }`
-    - The scheme (e.g., `https` or `urn`).
+    - The scheme (e.g., `https` or `urn`); does not include the `:` separator.
 
-- `string $user { get; }`
+- `uri_decoded_string $user { get; }`
     - The user name.
 
-- `string $password { get; }`
+- `uri_decoded_string $password { get; }`
     - The password.
 
-- `string $host { get; }`
+- `uri_decoded_string $host { get; }`
     - The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
 
 - `?int $port { get; }`
     - The port (e.g. `443`).
 
-- `string $path { get; }`
-    - The path (e.g. `/path/to/page.html` or `ietf:rfc:3986`).
+- `uri_composed_string $path { get; }`
+    - The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
 
-- `string $query { get; }`
-    - The query string (e.g. `foo=bar&baz=qux`).
+- `uri_composed_string $query { get; }`
+    - The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
 
 - `string $fragment { get; }`
-    - The fragment.
+    - The fragment; does not include the `#` separator.
 
-- `QueryParamsArray $queryParams { get; }`
-    - A decoded form of `$query` (e.g., as if by [`parse_str()`][] or some other decoding mechanism).
+- `uri_query_params_array $queryParams { get; }`
+    - The `$query` string decomposed as an array.
 
-- `string $userInfo { get; }`
-    - The combined `$user` and `$password` (e.g. as per [RFC 3986][]).
+- `uri_percent_composed_string $userInfo { get; }`
+    - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
 
-- `string $authority { get; }`
-    - The combined `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
+- `uri_percent_composed_string $authority { get; }`
+    - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
 
-- `__toString() : string`
-    - Recomposes the component values into a full URI string.
+- `__toString() : uri_percent_composed_string`
+    - Composes the component values into a full URI string.
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
@@ -79,21 +79,19 @@ Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` property looks more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
-- **Unless specified otherwise, _Uri_ implementations are presumed conform to [`parse_url()`][] and related PHP functions.** Implementations MAY be marked with _Rfc3986Uri_, _Rfc3987Uri_, or _WhatwgUri_ to indicate they conform to those specifications instead.
-
 ### _MutableUri_
 
 The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 
 - `string $scheme { get; set; }`
-- `string $host { get; set; }`
+- `uri_decoded_string $host { get; set; }`
 - `?int $port { get; set; }`
-- `string $user { get; set; }`
-- `string $password { get; set; }`
-- `string $path { get; set; }`
-- `string $query { get; set; }`
+- `uri_decoded_string $user { get; set; }`
+- `uri_decoded_string $password { get; set; }`
+- `uri_composed_string $path { get; set; }`
+- `uri_composed_string $query { get; set; }`
 - `string $fragment { get; set; }`
-- `QueryParamsArray $queryParams { get; set; }`
+- `uri_query_params_array $queryParams { get; set; }`
 
 Implementations MUST keep `$queryParams` and `$query` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -101,7 +99,7 @@ Notes:
 
 - **These are property set hooks, not setter methods.** The property values are straightforward and require little-to-no logic around setting in most cases.
 
-- **There are no property set hooks for `$userInfo` or `$authority`.** Because these are combined from other property values, they are not modified directly.
+- **There are no property set hooks for `$userInfo` or `$authority`.** Because these are combined from other component values, they are not modified directly.
 
 ### _ImmutableUri_
 
@@ -110,29 +108,34 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 - `withScheme(string $scheme) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$scheme` value.
 
-- `withUser(string $user) : ImmutableUri`
+- `withUser(uri_decoded_string $user) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$user` value.
 
-- `withPassword(string $password) : ImmutableUri`
+- `withPassword(uri_decoded_string $password) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
+    - The `$password` argument MUST be treated as already decoded.
 
-- `withHost(string $host) : ImmutableUri`
+- `withHost(uri_decoded_string $host) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
+    - The `$host` argument MUST be treated as already decoded.
 
 - `withPort(?int $port) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
 
-- `withPath(string $path) : ImmutableUri`
+- `withPath(uri_composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
+    - The `$path` argument MUST be treated as already **encoded**.
 
-- `withQuery(string $query) : ImmutableUri`
+- `withQuery(uri_composed_string $query) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
+    - The `$query` argument MUST be treated as already **encoded**.
 
 - `withFragment(string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
-- `withQueryParams(QueryParamsArray $queryParams) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$queryParams` value.
+- `withQueryParams(uri_query_params_array $queryParams) : ImmutableUri`
+    - Returns a new instance of the _ImmutableUri_ with the decode `$queryParams` value.
+    - The `$queryParams` argument MUST be treated as already decoded.
 
 Implementations MUST keep `$queryParams` and `$query` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -172,12 +175,12 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
     ```php
     newUri(
         string $scheme = '',
-        string $user = '',
-        string $password = '',
-        string $host = '',
+        uri_decoded_string $user = '',
+        uri_decoded_string $password = '',
+        uri_decoded_string $host = '',
         ?int $port = null,
-        string $path = '',
-        string $query = '',
+        uri_composed_string $path = '',
+        uri_composed_string $query = '',
         string $fragment = '',
     ) : Uri
     ```
@@ -188,6 +191,31 @@ The _UriParser_ interface affords creating a new _Uri_ instance from a URI strin
 
 - `parseUri(string|Stringable $uriString) : Uri`
 
+Notes:
+
+- **The parser returns a new _Uri_ instance instead of an array of component values.** This reduces the number of steps involved in creating a new _Uri_ instance. If needed, _Uri_ instance properties can be used in place of an array of component values.
+
+### _UriTypeAliases_
+
+The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static analysis:
+
+- `uri_composed_string`: a `uri_form_url_composed_string` or `uri_percent_composed_string`
+- `uri_decoded_string`: the result of decoding a `uri_encoded_string` (as via [`urldecode()`][]).
+- `uri_encoded_string`: a `uri_form_url_encoded_string` or `uri_percent_encoded_string`.
+- `uri_form_url_composed_string`: a concatenation of `uri_form_url_encoded_string`s and `string` separators.
+- `uri_form_url_encoded_string`: an `application/x-www-form-urlencoded` string, with  `+` for the space character as via [`urlencode()`][].
+- `uri_percent_composed_string`: a concatenation of `uri_percent_encoded_string`s and `string` separators.
+- `uri_percent_encoded_string`: a percent-encoded string, with `%20` for the space character as via [`rawurlencode()`][].
+- `uri_query_params_array`: an array of up to 16 dimensions with `uri_decoded_string` keys and `uri_decoded_string` values.
+
+Notes:
+
+- **Native PHP functions will suffice for the type aliases.**
+
+    - [`http_build_query()`][] with `encoding_type: PHP_QUERY_3986` will encode each space character as `%20`, returning a `uri_percent_encoded_string`.
+    - [`parse_str()`][] will decode both `+` and `%20` to a space character, returning a `uri_query_params_array`.
+    - [`rawurlencode()`][]  will encode each space character as `%20`, returning a `uri_percent_encoded_string`.
+    - [`urldecode()`][] will decode both `+` and `%20` to a space character, returning a `uri_decoded_string`.
 
 ## Implementations
 
@@ -217,8 +245,13 @@ Among the researched projects, most used camel-casing for this property and/or i
 
 * * *
 
+[`http_build_query()`]: https://php.net/http_build_query
+[`parse_str()`]: https://php.net/parse_str
 [`parse_url()`]: https://php.net/parse_url
+[`rawurlencode()`]: https://php.net/rawurlencode
 [`trim()`]: https://php.net/trim
+[`urldecode()`]: https://php.net/urldecode
+[`urlencode()`]: https://php.net/urlencode
 [BCP 14]: https://www.rfc-editor.org/info/bcp14
 [README-RESEARCH.md]: ./README-RESEARCH.md
 [RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119.txt

@@ -163,7 +163,7 @@ When the query is offered as an array, it is under various terms, with variation
 | -------- | ------------------------------ | ----- | ----- | ------ | ---------- | --------- |
 | amphp    | getAllQueryParameters()        |       |       |        | X          |           |
 | aura     | $query                         | X     |       |        |            |           |
-| ci4      | getQueryParamsArray()          |       | X     |        |            |           |
+| ci4      | geturi_query_params_array()          |       | X     |        |            |           |
 | codezero | getQuery()                     | X     |       |        |            |           |
 | joomla   | getQuery()                     | X     |       |        |            |           |
 | josan    | $parameters                    |       |       |        | X          |           |
