@@ -176,7 +176,7 @@ When the query is offered as an array, it is under various terms, with variation
 
 ### User Information Component
 
-7 of the 16 projects offer a string of the combined username and password portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
+7 of the 16 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
 
 |          | User Information |
 | -------- | ---------------- |
