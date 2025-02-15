@@ -62,14 +62,15 @@ The _Uri_ interface affords readability of URI components using these properties
 - `uri_query_params_array $queryParams { get; }`
     - The `$query` string decomposed to an array.
 
-- `uri_percent_composed_string $userInfo { get; }`
+- `uri_composed_string $userInfo { get; }`
     - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
 
-- `uri_percent_composed_string $authority { get; }`
+- `uri_composed_string $authority { get; }`
     - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
 
-- `__toString() : uri_percent_composed_string`
+- `__toString() : uri_composed_string`
     - Composes the component values into a full URI string.
+    - Implementations SHOULD return `uri_percent_composed_string` but MAY return `uri_form_url_composed_string`.
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
