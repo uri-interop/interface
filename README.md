@@ -199,14 +199,29 @@ Notes:
 
 The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static analysis:
 
-- `uri_composed_string`: a `uri_form_url_composed_string` or `uri_percent_composed_string`
-- `uri_decoded_string`: the result of decoding a `uri_encoded_string` (as via [`urldecode()`][]).
-- `uri_encoded_string`: a `uri_form_url_encoded_string` or `uri_percent_encoded_string`.
-- `uri_form_url_composed_string`: a concatenation of `uri_form_url_encoded_string`s and `string` separators.
-- `uri_form_url_encoded_string`: an `application/x-www-form-urlencoded` string, with  `+` for the space character as via [`urlencode()`][].
-- `uri_percent_composed_string`: a concatenation of `uri_percent_encoded_string`s and `string` separators.
-- `uri_percent_encoded_string`: a percent-encoded string, with `%20` for the space character as via [`rawurlencode()`][].
-- `uri_query_params_array`: an array of up to 16 dimensions with `uri_decoded_string` keys and `uri_decoded_string` values.
+- `uri_composed_string`
+    - a `uri_form_url_composed_string` or `uri_percent_composed_string`
+
+- `uri_decoded_string`
+    - the result of decoding a `uri_encoded_string` as via [`urldecode()`][].
+
+- `uri_encoded_string`
+    - a `uri_form_url_encoded_string` or `uri_percent_encoded_string`.
+
+- `uri_form_url_composed_string`
+    - a concatenation of `uri_form_url_encoded_string`s and `string` separators.
+
+- `uri_form_url_encoded_string`
+    - an `application/x-www-form-urlencoded` string, with  `+` for the space character as via [`urlencode()`][].
+
+- `uri_percent_composed_string`
+    - a concatenation of `uri_percent_encoded_string`s and `string` separators.
+
+- `uri_percent_encoded_string`
+    - a percent-encoded string, with `%20` for the space character as via [`rawurlencode()`][].
+
+- `uri_query_params_array`
+    - an array of up to 16 dimensions with `uri_decoded_string` keys and `uri_decoded_string` values.
 
 Notes:
 
