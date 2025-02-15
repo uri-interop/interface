@@ -56,11 +56,11 @@ The _Uri_ interface affords readability of URI components using these properties
 - `uri_composed_string $query { get; }`
     - The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
 
-- `string $fragment { get; }`
+- `url_decoded_string $fragment { get; }`
     - The fragment; does not include the `#` separator.
 
 - `uri_query_params_array $queryParams { get; }`
-    - The `$query` string decomposed as an array.
+    - The `$query` string decomposed to an array.
 
 - `uri_percent_composed_string $userInfo { get; }`
     - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
@@ -90,7 +90,7 @@ The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 - `uri_decoded_string $password { get; set; }`
 - `uri_composed_string $path { get; set; }`
 - `uri_composed_string $query { get; set; }`
-- `string $fragment { get; set; }`
+- `uri_decoded_string $fragment { get; set; }`
 - `uri_query_params_array $queryParams { get; set; }`
 
 Implementations MUST keep `$queryParams` and `$query` in sync; if one is modified, the other MUST be modified accordingly.
@@ -130,7 +130,7 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
     - The `$query` argument MUST be treated as already **encoded**.
 
-- `withFragment(string $fragment) : ImmutableUri`
+- `withFragment(uri_decoded_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
 - `withQueryParams(uri_query_params_array $queryParams) : ImmutableUri`
@@ -181,7 +181,7 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
         ?int $port = null,
         uri_composed_string $path = '',
         uri_composed_string $query = '',
-        string $fragment = '',
+        uri_decoded_string $fragment = '',
     ) : Uri
     ```
 

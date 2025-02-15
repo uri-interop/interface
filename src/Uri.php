@@ -14,7 +14,7 @@ use Stringable;
  *
  * @phpstan-import-type uri_composed_string from UriTypeAliases
  * @phpstan-import-type uri_decoded_string from UriTypeAliases
- * @phpstan-import-type uri_encoded_string from UriTypeAliases
+ * @phpstan-import-type uri_percent_composed_string from UriTypeAliases
  * @phpstan-import-type uri_query_params_array from UriTypeAliases
  */
 interface Uri extends Stringable
@@ -51,19 +51,21 @@ interface Uri extends Stringable
     /**
      * The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
      *
-     * @var uri_encoded_string
+     * @var uri_composed_string
      */
     public string $path { get; }
 
     /**
      * The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
      *
-     * @var uri_encoded_string
+     * @var uri_composed_string
      */
     public string $query { get; }
 
     /**
      * The fragment; does not include the `#` separator.
+     *
+     * @var uri_decoded_string
      */
     public string $fragment { get; }
 
@@ -77,21 +79,21 @@ interface Uri extends Stringable
     /**
      * The composed `$user` and `$password` (e.g. as per RFC 3986).
      *
-     * @var uri_composed_string
+     * @var uri_percent_composed_string
      */
     public string $userInfo { get; }
 
     /**
      * The composed `$userInfo`, `$host`, and `$port` (e.g. as per RFC 3986).
      *
-     * @var uri_composed_string
+     * @var uri_percent_composed_string
      */
     public string $authority  { get; }
 
     /**
      * Composes the component values into a full URI string.
      *
-     * @return uri_composed_string
+     * @return uri_percent_composed_string
      */
     public function __toString() : string;
 }

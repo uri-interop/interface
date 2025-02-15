@@ -68,6 +68,8 @@ interface ImmutableUri extends Uri
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified
      * `$fragment` value.
+     *
+     * @param uri_decoded_string $fragment
      */
     public function withFragment(string $fragment) : ImmutableUri;
 
