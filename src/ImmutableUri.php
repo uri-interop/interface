@@ -9,6 +9,7 @@ namespace UriInterop\Interface;
  *
  * @phpstan-import-type uri_composed_string from UriTypeAliases
  * @phpstan-import-type uri_decoded_string from UriTypeAliases
+ * @phpstan-import-type uri_path_segments_array from UriTypeAliases
  * @phpstan-import-type uri_query_params_array from UriTypeAliases
  */
 interface ImmutableUri extends Uri
@@ -53,6 +54,9 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$path`
      * value.
      *
+     * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
+     * modified, the other MUST be modified accordingly.
+     *
      * @param uri_composed_string $path
      */
     public function withPath(string $path) : ImmutableUri;
@@ -60,6 +64,9 @@ interface ImmutableUri extends Uri
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$query`
      * value.
+     *
+     * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
+     * modified, the other MUST be modified accordingly.
      *
      * @param uri_composed_string $query
      */
@@ -75,7 +82,21 @@ interface ImmutableUri extends Uri
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified
+     * `$pathSegments` value.
+     *
+     * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
+     * modified, the other MUST be modified accordingly.
+     *
+     * @param uri_path_segments_array $pathSegments
+     */
+    public function withPathSegments(array $pathSegments) : ImmutableUri;
+
+    /**
+     * Returns a new instance of the _ImmutableUri_ with the modified
      * `$queryParams` value.
+     *
+     * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
+     * modified, the other MUST be modified accordingly.
      *
      * @param uri_query_params_array $queryParams
      */

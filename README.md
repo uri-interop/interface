@@ -59,8 +59,11 @@ The _Uri_ interface affords readability of URI components using these properties
 - `url_decoded_string $fragment { get; }`
     - The fragment; does not include the `#` separator.
 
+- `uri_path_segments_array $pathSegments { get; }`
+    - The `$path` string decomposed to a sequential array.
+
 - `uri_query_params_array $queryParams { get; }`
-    - The `$query` string decomposed to an array.
+    - The `$query` string decomposed to an associative array.
 
 - `uri_composed_string $userInfo { get; }`
     - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
@@ -78,7 +81,7 @@ Implementations MAY validate component values; the implementation MUST throw _Lo
 
 Notes:
 
-- **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` property looks more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
+- **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` and `$pathSegments` properties look more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
 ### _MutableUri_
 
@@ -92,9 +95,12 @@ The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 - `uri_composed_string $path { get; set; }`
 - `uri_composed_string $query { get; set; }`
 - `uri_decoded_string $fragment { get; set; }`
+- `uri_path_segments_array $pathSegments { get; set; }`
 - `uri_query_params_array $queryParams { get; set; }`
 
-Implementations MUST keep `$queryParams` and `$query` in sync; if one is modified, the other MUST be modified accordingly.
+Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
+
+Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 Notes:
 
@@ -114,31 +120,31 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 
 - `withPassword(uri_decoded_string $password) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
-    - The `$password` argument MUST be treated as already decoded.
 
 - `withHost(uri_decoded_string $host) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
-    - The `$host` argument MUST be treated as already decoded.
 
 - `withPort(?int $port) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
 
 - `withPath(uri_composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
-    - The `$path` argument MUST be treated as already **encoded**.
+    - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
 - `withQuery(uri_composed_string $query) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
-    - The `$query` argument MUST be treated as already **encoded**.
+    - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 - `withFragment(uri_decoded_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
-- `withQueryParams(uri_query_params_array $queryParams) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the decode `$queryParams` value.
-    - The `$queryParams` argument MUST be treated as already decoded.
+- `withPathSegments(uri_path_segments_array $pathSegments) : ImmutableUri`
+    - Returns a new instance of the _ImmutableUri_ with the modified `$pathSegments` value.
+    - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
-Implementations MUST keep `$queryParams` and `$query` in sync; if one is modified, the other MUST be modified accordingly.
+- `withQueryParams(uri_query_params_array $queryParams) : ImmutableUri`
+    - Returns a new instance of the _ImmutableUri_ with the modified `$queryParams` value.
+    - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 Notes:
 
@@ -160,7 +166,7 @@ Implementations with this marker interface MUST conform to [RFC 3987][].
 
 The _Url_ marker interface extends _Uri_ to indicate a scheme component must be present; it adds no properties or methods.
 
-Implmentations with this marker interface MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or consists only of whitespace.
+Implementations with this marker interface MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or consists only of whitespace.
 
 ### _WhatwgUrl_
 
@@ -226,12 +232,14 @@ The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static 
 
 Notes:
 
-- **Native PHP functions will suffice for the type aliases.**
+- **Native PHP functions will suffice for the type aliases.** Implementations MAY provide their own alternative functionality.
 
+    - [`http_build_query()`][] with `encoding_type: PHP_QUERY_1738` will encode each space character as `+`, returning a `uri_form_url_encoded_string`.
     - [`http_build_query()`][] with `encoding_type: PHP_QUERY_3986` will encode each space character as `%20`, returning a `uri_percent_encoded_string`.
     - [`parse_str()`][] will decode both `+` and `%20` to a space character, returning a `uri_query_params_array`.
     - [`rawurlencode()`][]  will encode each space character as `%20`, returning a `uri_percent_encoded_string`.
     - [`urldecode()`][] will decode both `+` and `%20` to a space character, returning a `uri_decoded_string`.
+    - [`urlencode()`][]  will encode each space character as `+`, returning a `uri_form_url_encoded_string`.
 
 ## Implementations
 

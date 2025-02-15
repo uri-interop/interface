@@ -174,6 +174,29 @@ When the query is offered as an array, it is under various terms, with variation
 | xpforge  | params()                       |       |       | X      |            |           |
 | zenstr   | $parameters, withQueryParams() |       |       | X      | X          |           |
 
+### Path As Array
+
+These projects offer the path string decoded into an array (or equivalent) of segment strings, either via a getter method or a property:
+
+|          | Path (as array)              |
+| -------- | ---------------------------- |
+| amphp    |                              |
+| aura     | _Path_ extends _ArrayObject_ |
+| ci4      | `URI::getSegments()`         |
+| codezero | `UrlBuilder::getSlugs()`     |
+| joomla   |                              |
+| josan    | `Url::$segments`             |
+| justking |                              |
+| laminas  |                              |
+| league   |                              |
+| nette    |                              |
+| opis     |                              |
+| pear     |                              |
+| psr      |                              |
+| rowbot   |                              |
+| xpforge  |                              |
+| zenstr   | `Path::segments()`           |
+
 ### User Information Component
 
 7 of the 16 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:

@@ -14,6 +14,7 @@ use Stringable;
  *
  * @phpstan-import-type uri_composed_string from UriTypeAliases
  * @phpstan-import-type uri_decoded_string from UriTypeAliases
+ * @phpstan-import-type uri_path_segments_array from UriTypeAliases
  * @phpstan-import-type uri_query_params_array from UriTypeAliases
  */
 interface Uri extends Stringable
@@ -67,6 +68,13 @@ interface Uri extends Stringable
      * @var uri_decoded_string
      */
     public string $fragment { get; }
+
+    /**
+     *  A form of `$path` as an array.
+     *
+     * @var uri_path_segments_array
+     */
+    public array $pathSegments { get; }
 
     /**
      *  A form of `$query` as an array.

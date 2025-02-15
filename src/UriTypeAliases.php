@@ -14,6 +14,8 @@ namespace UriInterop\Interface;
  *
  * @phpstan-type uri_form_url_encoded_string string
  *
+ * @phpstan-type uri_path_segments_array array<int, uri_decoded_string>
+ *
  * @phpstan-type uri_percent_composed_string string
  *
  * @phpstan-type uri_percent_encoded_string string
