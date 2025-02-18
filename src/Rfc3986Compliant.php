@@ -6,6 +6,6 @@ namespace UriInterop\Interface;
 /**
  * Implementations with this marker interface MUST conform to RFC 3986.
  */
-interface Rfc3986Uri extends Uri
+interface Rfc3986Uri
 {
 }

@@ -7,10 +7,10 @@ namespace UriInterop\Interface;
  * Implementations MUST keep `$queryParams` and `$query` in sync; if one is
  * modified, the other MUST be modified accordingly.
  *
- * @phpstan-import-type uri_composed_string from UriTypeAliases
- * @phpstan-import-type uri_decoded_string from UriTypeAliases
- * @phpstan-import-type uri_path_segments_array from UriTypeAliases
- * @phpstan-import-type uri_query_params_array from UriTypeAliases
+ * @phpstan-import-type composed_string from UriTypeAliases
+ * @phpstan-import-type decoded_string from UriTypeAliases
+ * @phpstan-import-type path_segments_array from UriTypeAliases
+ * @phpstan-import-type query_params_array from UriTypeAliases
  */
 interface ImmutableUri extends Uri
 {
@@ -24,7 +24,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$user`
      * value.
      *
-     * @param uri_decoded_string $user
+     * @param decoded_string $user
      */
     public function withUser(string $user) : ImmutableUri;
 
@@ -32,7 +32,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified
      * `$password` value.
      *
-     * @param uri_decoded_string $password
+     * @param decoded_string $password
      */
     public function withPassword(string $password) : ImmutableUri;
 
@@ -40,7 +40,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$host`
      * value.
      *
-     * @param uri_decoded_string $host
+     * @param decoded_string $host
      */
     public function withHost(string $host) : ImmutableUri;
 
@@ -57,7 +57,7 @@ interface ImmutableUri extends Uri
      * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
      * modified, the other MUST be modified accordingly.
      *
-     * @param uri_composed_string $path
+     * @param composed_string $path
      */
     public function withPath(string $path) : ImmutableUri;
 
@@ -68,7 +68,7 @@ interface ImmutableUri extends Uri
      * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
      * modified, the other MUST be modified accordingly.
      *
-     * @param uri_composed_string $query
+     * @param composed_string $query
      */
     public function withQuery(string $query) : ImmutableUri;
 
@@ -76,7 +76,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified
      * `$fragment` value.
      *
-     * @param uri_decoded_string $fragment
+     * @param decoded_string $fragment
      */
     public function withFragment(string $fragment) : ImmutableUri;
 
@@ -87,7 +87,7 @@ interface ImmutableUri extends Uri
      * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
      * modified, the other MUST be modified accordingly.
      *
-     * @param uri_path_segments_array $pathSegments
+     * @param path_segments_array $pathSegments
      */
     public function withPathSegments(array $pathSegments) : ImmutableUri;
 
@@ -98,7 +98,7 @@ interface ImmutableUri extends Uri
      * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
      * modified, the other MUST be modified accordingly.
      *
-     * @param uri_query_params_array $queryParams
+     * @param query_params_array $queryParams
      */
     public function withQueryParams(array $queryParams) : ImmutableUri;
 }

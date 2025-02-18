@@ -12,10 +12,10 @@ use Stringable;
  * _LogicException_ (or an extension thereof) when the component value is
  * invalid.
  *
- * @phpstan-import-type uri_composed_string from UriTypeAliases
- * @phpstan-import-type uri_decoded_string from UriTypeAliases
- * @phpstan-import-type uri_path_segments_array from UriTypeAliases
- * @phpstan-import-type uri_query_params_array from UriTypeAliases
+ * @phpstan-import-type composed_string from UriTypeAliases
+ * @phpstan-import-type decoded_string from UriTypeAliases
+ * @phpstan-import-type path_segments_array from UriTypeAliases
+ * @phpstan-import-type query_params_array from UriTypeAliases
  */
 interface Uri extends Stringable
 {
@@ -27,7 +27,7 @@ interface Uri extends Stringable
     /**
      * The user name.
      *
-     * @var uri_decoded_string
+     * @var decoded_string
      */
     public string $user { get; }
 
@@ -39,7 +39,7 @@ interface Uri extends Stringable
     /**
      * The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
      *
-     * @var uri_decoded_string
+     * @var decoded_string
      */
     public string $host { get; }
 
@@ -51,56 +51,56 @@ interface Uri extends Stringable
     /**
      * The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
      *
-     * @var uri_composed_string
+     * @var composed_string
      */
     public string $path { get; }
 
     /**
      * The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
      *
-     * @var uri_composed_string
+     * @var composed_string
      */
     public string $query { get; }
 
     /**
      * The fragment; does not include the `#` separator.
      *
-     * @var uri_decoded_string
+     * @var decoded_string
      */
     public string $fragment { get; }
 
     /**
      *  A form of `$path` as an array.
      *
-     * @var uri_path_segments_array
+     * @var path_segments_array
      */
     public array $pathSegments { get; }
 
     /**
      *  A form of `$query` as an array.
      *
-     * @var uri_query_params_array
+     * @var query_params_array
      */
     public array $queryParams { get; }
 
     /**
      * The composed `$user` and `$password` (e.g. as per RFC 3986).
      *
-     * @var uri_composed_string
+     * @var composed_string
      */
     public string $userInfo { get; }
 
     /**
      * The composed `$userInfo`, `$host`, and `$port` (e.g. as per RFC 3986).
      *
-     * @var uri_composed_string
+     * @var composed_string
      */
     public string $authority  { get; }
 
     /**
      * Composes the component values into a full URI string.
      *
-     * @return uri_composed_string
+     * @return composed_string
      */
     public function __toString() : string;
 }

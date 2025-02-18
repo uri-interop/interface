@@ -15,9 +15,12 @@ Uri-Interop is based on research including the following 16 projects:
 - [opis/uri](https://github.com/opis/uri/blob/master/src/Uri.php) (opis)
 - [pear/net_url2](https://github.com/pear/Net_URL2/blob/master/Net/URL2.php) (pear)
 - [psr/http-message](https://github.com/php-fig/http-message/blob/master/src/UriInterface.php) (psr)
-- [rowbot/url](https://github.com/TRowbotham/URL-Parser/blob/master/src/URL.php) (rowbot)
 - [xp-forge/uri](https://github.com/xp-forge/uri/blob/master/src/main/php/util/URI.class.php) (xpforge)
 - [zenstruck/uri](https://github.com/zenstruck/uri/blob/2.x/src/Uri.php) (zenstr)
+
+Many other projects were considered but did not have an obvious URI or URL implementation.
+
+Likewise, [rowbot/url](https://github.com/TRowbotham/URL-Parser/blob/master/src/URL.php) is a WHATWG-URL implementation, and is different-enough to warrant exclusion here. (A future or alternative interop standard may center on WHATWG-URL.)
 
 ## Mutability
 
@@ -38,7 +41,6 @@ The projects offer varying levels of mutability:
 | opis     | X        |           |         |
 | pear     |          |           | X       |
 | psr      |          | X         |         |
-| rowbot   |          |           | X       |
 | xpforge  | X        |           |         |
 | zenstr   |          | X         |         |
 
@@ -74,13 +76,12 @@ Most projects provide access to a `user`(8) or `username` (5) component, either 
 | opis     | X      |            |      |
 | pear     | X      |            |      |
 | psr      |        |            | X    |
-| rowbot   |        | X          |      |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
 ### Pass/Password
 
-Most projects provide acccess to a `pass` (5) or `password` (9) component, either via a getter method or a property, but some do not provide it at all:
+Most projects provide acccess to a `pass` (5) or `password` (8) component, either via a getter method or a property, but some do not provide it at all:
 
 |          | `pass` | `password` | none |
 | -------- | ------ | ---------- | ---- |
@@ -97,7 +98,6 @@ Most projects provide acccess to a `pass` (5) or `password` (9) component, eithe
 | opis     | X      |            |      |
 | pear     |        | X          |      |
 | psr      |        |            | X    |
-| rowbot   |        | X          |      |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
@@ -120,11 +120,10 @@ The `port` value is always an integer, while the other components are always str
 | opis     | X      | X    | X        | X    | X    | X    | X     | X        |
 | pear (1) | X      | X    | X        | X    | X    |      | X     | X        |
 | psr      |        |      | X        |      | X    |      |       |          |
-| rowbot   |        |      |          |      | X    |      |       |          |
 | xpforge  |        | X    | X        | X    | X    |      |       |          |
 | zenstr   |        | X    | X        |      | X    |      |       | X        |
 | -------- | ------ | ---- | -------- | ---- | ---- | ---- | ----- | -------- |
-| TOTALS   | 4      | 6    | 7        | 5    | 16   | 2    | 4     | 5        |
+| TOTALS   | 4      | 6    | 7        | 5    | 15   | 2    | 4     | 5        |
 
 (1) Pear uses `false` instead of `null` to the same effect.
 
@@ -136,7 +135,7 @@ The projects sometimes offer additional or computed URI components.
 
 ### Query As Array
 
-10 of the projects offer the query string decoded into arrays of strings, either via a getter method or a property:
+12 of the 15 projects offer the query string decoded into arrays of strings, either via a getter method or a property:
 
 |          | Query (as array) |
 | -------- | ---------------- |
@@ -153,7 +152,6 @@ The projects sometimes offer additional or computed URI components.
 | opis     |                  |
 | pear     | X                |
 | psr      |                  |
-| rowbot   |                  |
 | xpforge  | X                |
 | zenstr   | X                |
 
@@ -163,7 +161,7 @@ When the query is offered as an array, it is under various terms, with variation
 | -------- | ------------------------------ | ----- | ----- | ------ | ---------- | --------- |
 | amphp    | getAllQueryParameters()        |       |       |        | X          |           |
 | aura     | $query                         | X     |       |        |            |           |
-| ci4      | geturi_query_params_array()          |       | X     |        |            |           |
+| ci4      | getquery_params_array()    |       | X     | X      |            |           |
 | codezero | getQuery()                     | X     |       |        |            |           |
 | joomla   | getQuery()                     | X     |       |        |            |           |
 | josan    | $parameters                    |       |       |        | X          |           |
@@ -193,13 +191,12 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | opis     |                              |
 | pear     |                              |
 | psr      |                              |
-| rowbot   |                              |
 | xpforge  |                              |
 | zenstr   | `Path::segments()`           |
 
 ### User Information Component
 
-7 of the 16 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
+7 of the 15 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
 
 |          | User Information |
 | -------- | ---------------- |
@@ -216,7 +213,6 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | opis     | X                |
 | pear     | X                |
 | psr      | X                |
-| rowbot   |                  |
 | xpforge  |                  |
 | zenstr   | X                |
 
@@ -243,7 +239,7 @@ The ability to modify user information *per se* is present in only 4 of the proj
 
 ### Authority Component
 
-9 of the projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
+9 of the 15 projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
 
 |          | Authority |
 | -------- | --------- |
@@ -260,7 +256,6 @@ The ability to modify user information *per se* is present in only 4 of the proj
 | opis     | X         |
 | pear     | X         |
 | psr      | X         |
-| rowbot   |           |
 | xpforge  | X         |
 | zenstr   | X         |
 
@@ -274,24 +269,23 @@ The ability to modify the authority value *per se* is not present in any project
 
 These projects use these approaches to parsing URL component values.
 
-|          | parse_url() | RFC 3986 | RFC 3987 | WHATWG-URL | None |
-| -------- | ----------- | -------- | -------- | ---------- | ---- |
-| amphp    | X           |          |          |            |      |
-| aura     | X           |          |          |            |      |
-| ci4      | X           |          |          |            |      |
-| codezero | X           |          |          |            |      |
-| joomla   | X (1)       |          |          |            |      |
-| josan    | X           |          |          |            |      |
-| justking | X           |          |          |            |      |
-| laminas  |             | X        |          |            |      |
-| league   |             | X        | X        |            |      |
-| nette    | X (2)       |          |          |            |      |
-| opis     |             | X        |          |            |      |
-| pear     |             | X        |          |            |      |
-| psr      |             |          |          |            | X    |
-| rowbot   |             |          |          | X          |      |
-| xpforge  |             | X        |          |            |      |
-| zenstr   | X           |          |          |            |      |
+|          | parse_url() | RFC 3986 | RFC 3987 | None |
+| -------- | ----------- | -------- | -------- | ---- |
+| amphp    | X           |          |          |      |
+| aura     | X           |          |          |      |
+| ci4      | X           |          |          |      |
+| codezero | X           |          |          |      |
+| joomla   | X (1)       |          |          |      |
+| josan    | X           |          |          |      |
+| justking | X           |          |          |      |
+| laminas  |             | X        |          |      |
+| league   |             | X        | X        |      |
+| nette    | X (2)       |          |          |      |
+| opis     |             | X        |          |      |
+| pear     |             | X        |          |      |
+| psr      |             |          |          | X    |
+| xpforge  |             | X        |          |      |
+| zenstr   | X           |          |          |      |
 
 1. Joomla handles UTF-8 characters while parsing.
 2. Nette applies rawurldecode() to the host, user, password, and fragment.
@@ -315,7 +309,6 @@ These projects offer a public method to parse URI strings to their component val
 | opis     | `Uri::create(string $uri, bool $normalize = false) : ?Uri`                                           |
 | pear     | `Net_URL2::__construct(string $url, array $options = array())`                                       |
 | psr      | `UriFactoryInterface::createUri(string $uri = '') : UriInterface`                                    |
-| rowbot   | `Url::parse(string\|Stringable $url, string\|Stringable\|null $base = null) : ?Url`                  |
 | xpforge  | `Uri::__construct(string\|Creation $base, ?string $relative = null)`                                 |
 | zenstr   | `ParsedUri::new(ParsedUri\|string\|null $what = null) : ParsedUri`                                   |
 
@@ -339,7 +332,6 @@ The projects throw these PHP _Exception_ types when parsing a URI or validating 
 | opis     |                            |                            |                                                                              |
 | pear     |                            |                            |                                                                              |
 | psr      |                            | _InvalidArgumentException_ |                                                                              |
-| rowbot   |                            |                            |                                                                              |
 | xpforge  | _Exception_                | _Exception_                | _lang\\{FormatException, IllegalStateException}_                             |
 | zenstr   | _InvalidArgumentException_ | _InvalidArgumentException_ |                                                                              |
 
