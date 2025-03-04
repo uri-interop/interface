@@ -14,6 +14,17 @@ namespace UriInterop\Interface;
  *
  * @phpstan-type formurl_encoded_string string
  *
+ * @phpstan-type parse_url_array array{
+ *    scheme?:string,
+ *    user?:string,
+ *    pass?:string,
+ *    host?:string,
+ *    port?:?int,
+ *    path?:string,
+ *    query?:string,
+ *    fragment?:string
+ * }
+ *
  * @phpstan-type path_segments_array array<int, decoded_string>
  *
  * @phpstan-type percent_composed_string string
