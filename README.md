@@ -14,7 +14,7 @@ This package attempts to adhere to the [Package Development Standards](https://p
 Uri-Interop defines these interfaces to afford reading and recomposing URI component values:
 
 - [_Uri_](#uri) affords reading of the URI component values and recomposing them into a string.
-- [_Url_](#url) extends _Uri_ to indicate a scheme is required.
+- [_Url_](#url) extends _Uri_ to indicate a scheme component is required.
 
 Uri-Interop separately defines these interfaces to afford modifying URI component values:
 
@@ -37,49 +37,63 @@ Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAlia
 
 The _Uri_ interface affords readability of URI components using these properties and methods:
 
-- `string $scheme { get; }`
-    - The scheme (e.g., `https` or `urn`); does not include the `:` separator.
+- `?string $scheme { get; }`
+    - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
+    - Implementations MUST report this value as `null` if the scheme component is not present.
 
-- `decoded_string $user { get; }`
-    - The user name.
+- `?decoded_string $user { get; }`
+    - The user component value.
+    - Implementations MUST report this value as `null` if the user component is not present.
 
-- `decoded_string $password { get; }`
-    - The password.
+- `?decoded_string $password { get; }`
+    - The password component value.
+    - Implementations MUST report this value as `null` if the password component is not present.
 
-- `decoded_string $host { get; }`
-    - The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
+- `?decoded_string $host { get; }`
+    - The host component value (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
+    - Implementations MUST report this value as `null` if the host component is not present.
 
 - `?int $port { get; }`
-    - The port (e.g. `443`).
+    - The port component value (e.g. `443`).
+    - Implementations MUST report this value as `null` if the port component is not present.
 
-- `composed_string $path { get; }`
-    - The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
+- `?composed_string $path { get; }`
+    - The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
+    - Implementations MUST report this value as `null` if the path component is not present.
 
-- `composed_string $query { get; }`
-    - The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
+- `?composed_string $query { get; }`
+    - The query component value (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
+    - Implementations MUST report this value as `null` if the query component is not present.
 
-- `url_decoded_string $fragment { get; }`
-    - The fragment; does not include the `#` separator.
+- `?url_decoded_string $fragment { get; }`
+    - The fragment component value; does not include the `#` separator.
+    - Implementations MUST report this value as `null` if the fragment component is not present.
 
-- `path_segments_array $pathSegments { get; }`
-    - The `$path` string decomposed to a sequential array.
+- `?path_segments_array $pathSegments { get; }`
+    - The path component value represented as a sequential array.
+    - Implementations MUST report this value as `null` if the path component is not present.
 
-- `query_params_array $queryParams { get; }`
-    - The `$query` string decomposed to an associative array.
+- `?query_params_array $queryParams { get; }`
+    - The query component value represented an associative array.
+    - Implementations MUST report this value as `null` if the query component is not present.
 
-- `composed_string $userInfo { get; }`
+- `?composed_string $userInfo { get; }`
     - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
+    - Implementations MUST report this value as `null` if both `$user` and `$password` are `null`.
 
-- `composed_string $authority { get; }`
+- `?composed_string $authority { get; }`
     - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
+    - Implementations MUST report this value as `null` if `$userInfo`, `$host`, and `$port` are all `null`.
 
 - `__toString() : composed_string`
     - Composes the component values into a full URI string.
-    - Implementations SHOULD return `percent_composed_string` but MAY return `formurl_composed_string`.
+    - Implementations SHOULD return `percent_composed_string` but MAY return `formurl_composed_string` (or combinations thereof).
 
 Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` and `$pathSegments` properties look more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
+
+- **All component values are nullable.** This is to differentiate between the state of a component being present but empty (e.g. as by an empty string) and a component not being present at all (represented by `null`).
 
 ### _Url_
 
@@ -91,16 +105,16 @@ Implementations with this marker interface MUST throw _LogicException_ (or an ex
 
 The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 
-- `string $scheme { get; set; }`
-- `decoded_string $host { get; set; }`
+- `?string $scheme { get; set; }`
+- `?decoded_string $host { get; set; }`
 - `?int $port { get; set; }`
-- `decoded_string $user { get; set; }`
-- `decoded_string $password { get; set; }`
-- `composed_string $path { get; set; }`
-- `composed_string $query { get; set; }`
-- `decoded_string $fragment { get; set; }`
-- `path_segments_array $pathSegments { get; set; }`
-- `query_params_array $queryParams { get; set; }`
+- `?decoded_string $user { get; set; }`
+- `?decoded_string $password { get; set; }`
+- `?composed_string $path { get; set; }`
+- `?composed_string $query { get; set; }`
+- `?decoded_string $fragment { get; set; }`
+- `?path_segments_array $pathSegments { get; set; }`
+- `?query_params_array $queryParams { get; set; }`
 
 Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -116,37 +130,37 @@ Notes:
 
 The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 
-- `withScheme(string $scheme) : ImmutableUri`
+- `withScheme(?string $scheme) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$scheme` value.
 
-- `withUser(decoded_string $user) : ImmutableUri`
+- `withUser(?decoded_string $user) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$user` value.
 
-- `withPassword(decoded_string $password) : ImmutableUri`
+- `withPassword(?decoded_string $password) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
 
-- `withHost(decoded_string $host) : ImmutableUri`
+- `withHost(?decoded_string $host) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
 
 - `withPort(?int $port) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
 
-- `withPath(composed_string $path) : ImmutableUri`
+- `withPath(?composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
     - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withQuery(composed_string $query) : ImmutableUri`
+- `withQuery(?composed_string $query) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(decoded_string $fragment) : ImmutableUri`
+- `withFragment(?decoded_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
-- `withPathSegments(path_segments_array $pathSegments) : ImmutableUri`
+- `withPathSegments(?path_segments_array $pathSegments) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$pathSegments` value.
     - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withQueryParams(query_params_array $queryParams) : ImmutableUri`
+- `withQueryParams(?query_params_array $queryParams) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$queryParams` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -161,14 +175,14 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
 -
     ```php
     newUri(
-        string $scheme = '',
-        decoded_string $user = '',
-        decoded_string $password = '',
-        decoded_string $host = '',
+        ?string $scheme = null,
+        ?decoded_string $user = null,
+        ?decoded_string $password = null,
+        ?decoded_string $host = null,
         ?int $port = null,
-        composed_string $path = '',
-        composed_string $query = '',
-        decoded_string $fragment = '',
+        ?composed_string $path = null,
+        ?composed_string $query = null,
+        ?decoded_string $fragment = null,
     ) : Uri
     ```
 

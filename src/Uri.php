@@ -22,26 +22,26 @@ interface Uri extends Stringable
     /**
      * The scheme (e.g., `https` or `urn`); does not include the `:` separator.
      */
-    public string $scheme { get; }
+    public ?string $scheme { get; }
 
     /**
      * The user name.
      *
-     * @var decoded_string
+     * @var ?decoded_string
      */
-    public string $user { get; }
+    public ?string $user { get; }
 
     /**
      * The password.
      */
-    public string $password { get; }
+    public ?string $password { get; }
 
     /**
      * The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
      *
-     * @var decoded_string
+     * @var ?decoded_string
      */
-    public string $host { get; }
+    public ?string $host { get; }
 
     /**
      * The port (e.g. `443`).
@@ -51,51 +51,51 @@ interface Uri extends Stringable
     /**
      * The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
      *
-     * @var composed_string
+     * @var ?composed_string
      */
-    public string $path { get; }
+    public ?string $path { get; }
 
     /**
      * The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
      *
-     * @var composed_string
+     * @var ?composed_string
      */
-    public string $query { get; }
+    public ?string $query { get; }
 
     /**
      * The fragment; does not include the `#` separator.
      *
-     * @var decoded_string
+     * @var ?decoded_string
      */
-    public string $fragment { get; }
+    public ?string $fragment { get; }
 
     /**
      *  A form of `$path` as an array.
      *
-     * @var path_segments_array
+     * @var ?path_segments_array
      */
-    public array $pathSegments { get; }
+    public ?array $pathSegments { get; }
 
     /**
      *  A form of `$query` as an array.
      *
-     * @var query_params_array
+     * @var ?query_params_array
      */
-    public array $queryParams { get; }
+    public ?array $queryParams { get; }
 
     /**
      * The composed `$user` and `$password` (e.g. as per RFC 3986).
      *
-     * @var composed_string
+     * @var ?composed_string
      */
-    public string $userInfo { get; }
+    public ?string $userInfo { get; }
 
     /**
      * The composed `$userInfo`, `$host`, and `$port` (e.g. as per RFC 3986).
      *
-     * @var composed_string
+     * @var ?composed_string
      */
-    public string $authority  { get; }
+    public ?string $authority  { get; }
 
     /**
      * Composes the component values into a full URI string.

@@ -15,22 +15,22 @@ interface MutableUri extends Uri
     /**
      * @inheritdoc
      */
-    public string $scheme { get; set; }
+    public ?string $scheme { get; set; }
 
     /**
      * @inheritdoc
      */
-    public string $user { get; set; }
+    public ?string $user { get; set; }
 
     /**
      * @inheritdoc
      */
-    public string $password { get; set; }
+    public ?string $password { get; set; }
 
     /**
      * @inheritdoc
      */
-    public string $host { get; set; }
+    public ?string $host { get; set; }
 
     /**
      * @inheritdoc
@@ -40,25 +40,25 @@ interface MutableUri extends Uri
     /**
      * @inheritdoc
      */
-    public string $path { get; set; }
+    public ?string $path { get; set; }
 
     /**
      * @inheritdoc
      */
-    public string $query { get; set; }
+    public ?string $query { get; set; }
 
     /**
      * @inheritdoc
      */
-    public string $fragment { get; set; }
+    public ?string $fragment { get; set; }
 
     /**
      * @inheritdoc
      */
-    public array $pathSegments { get; set; }
+    public ?array $pathSegments { get; set; }
 
     /**
      * @inheritdoc
      */
-    public array $queryParams { get; set; }
+    public ?array $queryParams { get; set; }
 }

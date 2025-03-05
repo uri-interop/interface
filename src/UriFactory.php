@@ -10,21 +10,21 @@ namespace UriInterop\Interface;
 interface UriFactory
 {
     /**
-     * @param decoded_string $user
-     * @param decoded_string $password
-     * @param decoded_string $host
-     * @param composed_string $path
-     * @param composed_string $query
-     * @param decoded_string $fragment
+     * @param ?decoded_string $user
+     * @param ?decoded_string $password
+     * @param ?decoded_string $host
+     * @param ?composed_string $path
+     * @param ?composed_string $query
+     * @param ?decoded_string $fragment
      */
     public function newUri(
-        string $scheme = '',
-        string $user = '',
-        string $password = '',
-        string $host = '',
+        ?string $scheme = null,
+        ?string $user = null,
+        ?string $password = null,
+        ?string $host = null,
         ?int $port = null,
-        string $path = '',
-        string $query = '',
-        string $fragment = '',
+        ?string $path = null,
+        ?string $query = null,
+        ?string $fragment = null,
     ) : Uri;
 }
