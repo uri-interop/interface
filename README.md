@@ -11,13 +11,9 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines these interfaces to afford reading and recomposing URI component values:
+Uri-Interop defines separate interfaces to afford reading and modifying URI component values:
 
 - [_Uri_](#uri) affords reading of the URI component values and recomposing them into a string.
-- [_Url_](#url) extends _Uri_ to indicate a scheme component is required.
-
-Uri-Interop separately defines these interfaces to afford modifying URI component values:
-
 - [_MutableUri_](#mutableuri) extends _Uri_ to afford direct modification of component values.
 - [_ImmutableUri_](#immutableuri) extends _Uri_ to afford immutable modification of component values.
 
@@ -35,7 +31,7 @@ Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAlia
 
 ### _Uri_
 
-The _Uri_ interface affords readability of URI components using these properties and methods:
+The _Uri_ interface affords readability and recomposition of URI components using these properties and methods:
 
 - `?string $scheme { get; }`
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
@@ -78,11 +74,11 @@ The _Uri_ interface affords readability of URI components using these properties
     - Implementations MUST report this value as `null` if the query component is not present.
 
 - `?composed_string $userInfo { get; }`
-    - The composed `$user` and `$password` (e.g. as per [RFC 3986][]).
+    - The composed `$user` and `$password` (e.g. as per [RFC 3986][]); does not include the `@` separator.
     - Implementations MUST report this value as `null` if both `$user` and `$password` are `null`.
 
 - `?composed_string $authority { get; }`
-    - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]).
+    - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]); does not include the `//` separator.
     - Implementations MUST report this value as `null` if `$userInfo`, `$host`, and `$port` are all `null`.
 
 - `__toString() : composed_string`
@@ -93,13 +89,7 @@ Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` and `$pathSegments` properties look more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
-- **All component values are nullable.** This is to differentiate between the state of a component being present but empty (e.g. as by an empty string) and a component not being present at all (represented by `null`).
-
-### _Url_
-
-The _Url_ marker interface extends _Uri_ to indicate a scheme component must be present; it adds no properties or methods.
-
-Implementations with this marker interface MUST throw _LogicException_ (or an extension thereof) if `$scheme` is empty or consists only of whitespace.
+- **All component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`).
 
 ### _MutableUri_
 
@@ -253,7 +243,7 @@ Notes:
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
-Implementations MAY validate component values; the implementation MUST throw _LogicException_ (or an extension thereof) when the component value is invalid.
+Implementations MAY validate component values; the implementation MUST throw _LogicException_ (or an extension thereof) when a component value is invalid.
 
 Implementations MAY define additional properties and methods not defined in these interfaces.
 
