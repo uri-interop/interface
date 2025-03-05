@@ -74,11 +74,11 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - Implementations MUST report this value as `null` if the query component is not present.
 
 - `?composed_string $userInfo { get; }`
-    - The composed `$user` and `$password` (e.g. as per [RFC 3986][]); does not include the `@` separator.
+    - The recomposed `$user` and `$password` (e.g. as per [RFC 3986][]); does not include the `@` separator.
     - Implementations MUST report this value as `null` if both `$user` and `$password` are `null`.
 
 - `?composed_string $authority { get; }`
-    - The composed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]); does not include the `//` separator.
+    - The recomposed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]); does not include the `//` separator.
     - Implementations MUST report this value as `null` if `$userInfo`, `$host`, and `$port` are all `null`.
 
 - `__toString() : composed_string`

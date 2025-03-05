@@ -9,7 +9,7 @@ use Stringable;
  * Implementations MAY sanitize component values (e.g. by applying `trim()`.
  *
  * Implementations MAY validate component values; the implementation MUST throw
- * _LogicException_ (or an extension thereof) when the component value is
+ * _LogicException_ (or an extension thereof) when a component value is
  * invalid.
  *
  * @phpstan-import-type composed_string from UriTypeAliases
@@ -20,78 +20,119 @@ use Stringable;
 interface Uri extends Stringable
 {
     /**
-     * The scheme (e.g., `https` or `urn`); does not include the `:` separator.
+     * The scheme component value (e.g., `https` or `urn`); does not include
+     * the `:` separator.
+     *
+     * Implementations MUST report this value as `null` if the scheme component
+     * is not present.
      */
     public ?string $scheme { get; }
 
     /**
-     * The user name.
+     * The user component value.
+     *
+     * Implementations MUST report this value as `null` if the user component
+     * is not present.
      *
      * @var ?decoded_string
      */
     public ?string $user { get; }
 
     /**
-     * The password.
+     * The password component value.
+     *
+     * Implementations MUST report this value as `null` if the password
+     * component is not present.
      */
     public ?string $password { get; }
 
     /**
-     * The hostname or IP address (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
+     * The host component value (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
+     *
+     * Implementations MUST report this value as `null` if the host component
+     * is not present.
      *
      * @var ?decoded_string
      */
     public ?string $host { get; }
 
     /**
-     * The port (e.g. `443`).
+     * The port component value (e.g. `443`).
+     *
+     * Implementations MUST report this value as `null` if the port component
+     * is not present.
      */
     public ?int $port { get; }
 
     /**
-     * The path (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
+     * The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`,
+     * `user@example.net`, and so on).
+     *
+     * Implementations MUST report this value as `null` if the path component
+     * is not present.
      *
      * @var ?composed_string
      */
     public ?string $path { get; }
 
     /**
-     * The query string (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
+     * The query component value (e.g. `foo=bar&baz=qux`); does not include the
+     * `?` separator.
+     *
+     * Implementations MUST report this value as `null` if the query component
+     * is not present.
      *
      * @var ?composed_string
      */
     public ?string $query { get; }
 
     /**
-     * The fragment; does not include the `#` separator.
+     * The fragment component value; does not include the `#` separator.
+     *
+     * Implementations MUST report this value as `null` if the fragment
+     * component is not present.
      *
      * @var ?decoded_string
      */
     public ?string $fragment { get; }
 
     /**
-     *  A form of `$path` as an array.
+     * The path component value represented as a sequential array.
+     *
+     * Implementations MUST report this value as `null` if the path component
+     * is not present.
      *
      * @var ?path_segments_array
      */
     public ?array $pathSegments { get; }
 
     /**
-     *  A form of `$query` as an array.
+     * The query component value represented an associative array.
+     *
+     * Implementations MUST report this value as `null` if the query component
+     * is not present.
      *
      * @var ?query_params_array
      */
     public ?array $queryParams { get; }
 
     /**
-     * The composed `$user` and `$password` (e.g. as per RFC 3986).
+     * The recomposed `$user` and `$password` (e.g. as per [RFC 3986][]); does
+     * not include the `@` separator.
+     *
+     * Implementations MUST report this value as `null` if both `$user` and
+     * `$password` are `null`.
      *
      * @var ?composed_string
      */
     public ?string $userInfo { get; }
 
     /**
-     * The composed `$userInfo`, `$host`, and `$port` (e.g. as per RFC 3986).
+     * The recomposed `$userInfo`, `$host`, and `$port` (e.g. as per
+     * [RFC 3986][]); does not include the `//` separator.
+     *
+     * Implementations MUST report this value as `null` if `$userInfo`,
+     * `$host`, and `$port` are all `null`.
      *
      * @var ?composed_string
      */
@@ -99,6 +140,9 @@ interface Uri extends Stringable
 
     /**
      * Composes the component values into a full URI string.
+     *
+     * Implementations SHOULD return `percent_composed_string` but MAY return
+     * `formurl_composed_string` (or combinations thereof).
      *
      * @return composed_string
      */
