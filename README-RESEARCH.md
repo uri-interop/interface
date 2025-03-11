@@ -1,6 +1,6 @@
 # Research
 
-Uri-Interop is based on research including the following 16 projects:
+Uri-Interop is based on research including the following 15 projects:
 
 - [amphp/url](https://github.com/amphp/uri/blob/master/src/Uri.php) (amphp)
 - [aura/uri](https://github.com/auraphp/Aura.Uri/blob/2.x/src/Url.php) (aura)
