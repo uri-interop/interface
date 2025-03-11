@@ -40,7 +40,7 @@ interface MutableUri extends Uri
     /**
      * @inheritdoc
      */
-    public ?string $path { get; set; }
+    public string $path { get; set; }
 
     /**
      * @inheritdoc
@@ -55,7 +55,7 @@ interface MutableUri extends Uri
     /**
      * @inheritdoc
      */
-    public ?array $pathSegments { get; set; }
+    public array $pathSegments { get; set; }
 
     /**
      * @inheritdoc

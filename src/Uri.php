@@ -68,12 +68,9 @@ interface Uri extends Stringable
      * The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`,
      * `user@example.net`, and so on).
      *
-     * Implementations MUST report this value as `null` if the path component
-     * is not present.
-     *
-     * @var ?composed_string
+     * @var composed_string
      */
-    public ?string $path { get; }
+    public string $path { get; }
 
     /**
      * The query component value (e.g. `foo=bar&baz=qux`); does not include the
@@ -99,12 +96,9 @@ interface Uri extends Stringable
     /**
      * The path component value represented as a sequential array.
      *
-     * Implementations MUST report this value as `null` if the path component
-     * is not present.
-     *
-     * @var ?path_segments_array
+     * @var path_segments_array
      */
-    public ?array $pathSegments { get; }
+    public array $pathSegments { get; }
 
     /**
      * The query component value represented an associative array.

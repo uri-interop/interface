@@ -53,9 +53,8 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The port component value (e.g. `443`).
     - Implementations MUST report this value as `null` if the port component is not present.
 
-- `?composed_string $path { get; }`
+- `composed_string $path { get; }`
     - The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
-    - Implementations MUST report this value as `null` if the path component is not present.
 
 - `?composed_string $query { get; }`
     - The query component value (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
@@ -65,7 +64,7 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The fragment component value; does not include the `#` separator.
     - Implementations MUST report this value as `null` if the fragment component is not present.
 
-- `?path_segments_array $pathSegments { get; }`
+- `path_segments_array $pathSegments { get; }`
     - The path component value represented as a sequential array.
     - Implementations MUST report this value as `null` if the path component is not present.
 
@@ -89,7 +88,7 @@ Notes:
 
 - **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` and `$pathSegments` properties look more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
-- **All component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`).
+- **Most component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`). Note that `$path` and `$pathSegments` are always considered present (though they may be empty).
 
 ### _MutableUri_
 
@@ -100,10 +99,10 @@ The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 - `?int $port { get; set; }`
 - `?decoded_string $user { get; set; }`
 - `?decoded_string $password { get; set; }`
-- `?composed_string $path { get; set; }`
+- `composed_string $path { get; set; }`
 - `?composed_string $query { get; set; }`
 - `?decoded_string $fragment { get; set; }`
-- `?path_segments_array $pathSegments { get; set; }`
+- `path_segments_array $pathSegments { get; set; }`
 - `?query_params_array $queryParams { get; set; }`
 
 Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
@@ -135,7 +134,7 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 - `withPort(?int $port) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
 
-- `withPath(?composed_string $path) : ImmutableUri`
+- `withPath(composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
     - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -146,7 +145,7 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 - `withFragment(?decoded_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
-- `withPathSegments(?path_segments_array $pathSegments) : ImmutableUri`
+- `withPathSegments(path_segments_array $pathSegments) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$pathSegments` value.
     - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -170,7 +169,7 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
         ?decoded_string $password = null,
         ?decoded_string $host = null,
         ?int $port = null,
-        ?composed_string $path = null,
+        composed_string $path = '',
         ?composed_string $query = null,
         ?decoded_string $fragment = null,
     ) : Uri

@@ -13,7 +13,7 @@ interface UriFactory
      * @param ?decoded_string $user
      * @param ?decoded_string $password
      * @param ?decoded_string $host
-     * @param ?composed_string $path
+     * @param composed_string $path
      * @param ?composed_string $query
      * @param ?decoded_string $fragment
      */
@@ -23,7 +23,7 @@ interface UriFactory
         ?string $password = null,
         ?string $host = null,
         ?int $port = null,
-        ?string $path = null,
+        string $path = '',
         ?string $query = null,
         ?string $fragment = null,
     ) : Uri;
