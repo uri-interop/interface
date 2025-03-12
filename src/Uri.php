@@ -13,7 +13,7 @@ use Stringable;
  * invalid.
  *
  * @phpstan-import-type composed_string from UriTypeAliases
- * @phpstan-import-type decoded_string from UriTypeAliases
+ * @phpstan-import-type encoded_string from UriTypeAliases
  * @phpstan-import-type path_segments_array from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
@@ -34,7 +34,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the user component
      * is not present.
      *
-     * @var ?decoded_string
+     * @var ?encoded_string
      */
     public ?string $user { get; }
 
@@ -43,6 +43,8 @@ interface Uri extends Stringable
      *
      * Implementations MUST report this value as `null` if the password
      * component is not present.
+     *
+     * @var ?encoded_string
      */
     public ?string $password { get; }
 
@@ -52,7 +54,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the host component
      * is not present.
      *
-     * @var ?decoded_string
+     * @var ?encoded_string
      */
     public ?string $host { get; }
 
@@ -89,7 +91,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the fragment
      * component is not present.
      *
-     * @var ?decoded_string
+     * @var ?encoded_string
      */
     public ?string $fragment { get; }
 

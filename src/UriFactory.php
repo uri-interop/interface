@@ -5,17 +5,17 @@ namespace UriInterop\Interface;
 
 /**
  * @phpstan-import-type composed_string from UriTypeAliases
- * @phpstan-import-type decoded_string from UriTypeAliases
+ * @phpstan-import-type encoded_string from UriTypeAliases
  */
 interface UriFactory
 {
     /**
-     * @param ?decoded_string $user
-     * @param ?decoded_string $password
-     * @param ?decoded_string $host
+     * @param ?encoded_string $user
+     * @param ?encoded_string $password
+     * @param ?encoded_string $host
      * @param composed_string $path
      * @param ?composed_string $query
-     * @param ?decoded_string $fragment
+     * @param ?composed_string $fragment
      */
     public function newUri(
         ?string $scheme = null,

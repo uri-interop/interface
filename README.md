@@ -37,15 +37,15 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
     - Implementations MUST report this value as `null` if the scheme component is not present.
 
-- `?decoded_string $user { get; }`
+- `?encoded_string $user { get; }`
     - The user component value.
     - Implementations MUST report this value as `null` if the user component is not present.
 
-- `?decoded_string $password { get; }`
+- `?encoded_string $password { get; }`
     - The password component value.
     - Implementations MUST report this value as `null` if the password component is not present.
 
-- `?decoded_string $host { get; }`
+- `?encoded_string $host { get; }`
     - The host component value (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
     - Implementations MUST report this value as `null` if the host component is not present.
 
@@ -60,7 +60,7 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The query component value (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
     - Implementations MUST report this value as `null` if the query component is not present.
 
-- `?url_decoded_string $fragment { get; }`
+- `?composed_string $fragment { get; }`
     - The fragment component value; does not include the `#` separator.
     - Implementations MUST report this value as `null` if the fragment component is not present.
 
@@ -95,13 +95,13 @@ Notes:
 The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 
 - `?string $scheme { get; set; }`
-- `?decoded_string $host { get; set; }`
+- `?encoded_string $host { get; set; }`
 - `?int $port { get; set; }`
-- `?decoded_string $user { get; set; }`
-- `?decoded_string $password { get; set; }`
+- `?encoded_string $user { get; set; }`
+- `?encoded_string $password { get; set; }`
 - `composed_string $path { get; set; }`
 - `?composed_string $query { get; set; }`
-- `?decoded_string $fragment { get; set; }`
+- `?composed_string $fragment { get; set; }`
 - `path_segments_array $pathSegments { get; set; }`
 - `?query_params_array $queryParams { get; set; }`
 
@@ -122,13 +122,13 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 - `withScheme(?string $scheme) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$scheme` value.
 
-- `withUser(?decoded_string $user) : ImmutableUri`
+- `withUser(?encoded_string $user) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$user` value.
 
-- `withPassword(?decoded_string $password) : ImmutableUri`
+- `withPassword(?encoded_string $password) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
 
-- `withHost(?decoded_string $host) : ImmutableUri`
+- `withHost(?encoded_string $host) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
 
 - `withPort(?int $port) : ImmutableUri`
@@ -142,7 +142,7 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(?decoded_string $fragment) : ImmutableUri`
+- `withFragment(?composed_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
 - `withPathSegments(path_segments_array $pathSegments) : ImmutableUri`
@@ -165,13 +165,13 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
     ```php
     newUri(
         ?string $scheme = null,
-        ?decoded_string $user = null,
-        ?decoded_string $password = null,
-        ?decoded_string $host = null,
+        ?encoded_string $user = null,
+        ?encoded_string $password = null,
+        ?encoded_string $host = null,
         ?int $port = null,
         composed_string $path = '',
         ?composed_string $query = null,
-        ?decoded_string $fragment = null,
+        ?composed_string $fragment = null,
     ) : Uri
     ```
 
