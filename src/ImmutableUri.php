@@ -5,7 +5,8 @@ namespace UriInterop\Interface;
 
 /**
  * @phpstan-import-type composed_string from UriTypeAliases
- * @phpstan-import-type encoded_string from UriTypeAliases
+ * @phpstan-import-type percent_composed_string from UriTypeAliases
+ * @phpstan-import-type percent_encoded_string from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
 interface ImmutableUri extends Uri
@@ -20,7 +21,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$user`
      * value.
      *
-     * @param ?encoded_string $user
+     * @param ?percent_encoded_string $user
      */
     public function withUser(?string $user) : ImmutableUri;
 
@@ -28,7 +29,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified
      * `$password` value.
      *
-     * @param ?encoded_string $password
+     * @param ?percent_encoded_string $password
      */
     public function withPassword(?string $password) : ImmutableUri;
 
@@ -36,7 +37,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$host`
      * value.
      *
-     * @param ?encoded_string $host
+     * @param ?percent_encoded_string $host
      */
     public function withHost(?string $host) : ImmutableUri;
 
@@ -50,7 +51,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$path`
      * value.
      *
-     * @param composed_string $path
+     * @param percent_composed_string $path
      */
     public function withPath(string $path) : ImmutableUri;
 
@@ -69,7 +70,7 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified
      * `$fragment` value.
      *
-     * @param ?composed_string $fragment
+     * @param ?percent_composed_string $fragment
      */
     public function withFragment(?string $fragment) : ImmutableUri;
 

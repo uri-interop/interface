@@ -13,7 +13,8 @@ use Stringable;
  * invalid.
  *
  * @phpstan-import-type composed_string from UriTypeAliases
- * @phpstan-import-type encoded_string from UriTypeAliases
+ * @phpstan-import-type percent_composed_string from UriTypeAliases
+ * @phpstan-import-type percent_encoded_string from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
 interface Uri extends Stringable
@@ -33,7 +34,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the user component
      * is not present.
      *
-     * @var ?encoded_string
+     * @var ?percent_encoded_string
      */
     public ?string $user { get; }
 
@@ -43,7 +44,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the password
      * component is not present.
      *
-     * @var ?encoded_string
+     * @var ?percent_encoded_string
      */
     public ?string $password { get; }
 
@@ -53,7 +54,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the host component
      * is not present.
      *
-     * @var ?encoded_string
+     * @var ?percent_encoded_string
      */
     public ?string $host { get; }
 
@@ -69,7 +70,7 @@ interface Uri extends Stringable
      * The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`,
      * `user@example.net`, and so on).
      *
-     * @var composed_string
+     * @var percent_composed_string
      */
     public string $path { get; }
 
@@ -90,7 +91,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if the fragment
      * component is not present.
      *
-     * @var ?encoded_string
+     * @var ?percent_composed_string
      */
     public ?string $fragment { get; }
 
@@ -111,7 +112,7 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if both `$user` and
      * `$password` are `null`.
      *
-     * @var ?composed_string
+     * @var ?percent_composed_string
      */
     public ?string $userInfo { get; }
 
@@ -122,15 +123,12 @@ interface Uri extends Stringable
      * Implementations MUST report this value as `null` if `$userInfo`,
      * `$host`, and `$port` are all `null`.
      *
-     * @var ?composed_string
+     * @var ?percent_composed_string
      */
     public ?string $authority  { get; }
 
     /**
      * Composes the component values into a full URI string.
-     *
-     * Implementations SHOULD return `percent_composed_string` but MAY return
-     * `formurl_composed_string` (or combinations thereof).
      *
      * @return composed_string
      */

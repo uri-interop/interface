@@ -37,15 +37,15 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
     - Implementations MUST report this value as `null` if the scheme component is not present.
 
-- `?encoded_string $user { get; }`
+- `?percent_encoded_string $user { get; }`
     - The user component value.
     - Implementations MUST report this value as `null` if the user component is not present.
 
-- `?encoded_string $password { get; }`
+- `?percent_encoded_string $password { get; }`
     - The password component value.
     - Implementations MUST report this value as `null` if the password component is not present.
 
-- `?encoded_string $host { get; }`
+- `?percent_encoded_string $host { get; }`
     - The host component value (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
     - Implementations MUST report this value as `null` if the host component is not present.
 
@@ -53,14 +53,14 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The port component value (e.g. `443`).
     - Implementations MUST report this value as `null` if the port component is not present.
 
-- `composed_string $path { get; }`
+- `percent_composed_string $path { get; }`
     - The path component value (e.g. `/path/to/page.html`, `ietf:rfc:3986`, `user@example.net`, and so on).
 
 - `?composed_string $query { get; }`
     - The query component value (e.g. `foo=bar&baz=qux`); does not include the `?` separator.
     - Implementations MUST report this value as `null` if the query component is not present.
 
-- `?composed_string $fragment { get; }`
+- `?percent_composed_string $fragment { get; }`
     - The fragment component value; does not include the `#` separator.
     - Implementations MUST report this value as `null` if the fragment component is not present.
 
@@ -68,17 +68,16 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The query component value represented an associative array.
     - Implementations MUST report this value as `null` if the query component is not present.
 
-- `?composed_string $userInfo { get; }`
+- `?percent_composed_string $userInfo { get; }`
     - The recomposed `$user` and `$password` (e.g. as per [RFC 3986][]); does not include the `@` separator.
     - Implementations MUST report this value as `null` if both `$user` and `$password` are `null`.
 
-- `?composed_string $authority { get; }`
+- `?percent_composed_string $authority { get; }`
     - The recomposed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]); does not include the `//` separator.
     - Implementations MUST report this value as `null` if `$userInfo`, `$host`, and `$port` are all `null`.
 
 - `__toString() : composed_string`
     - Composes the component values into a full URI string.
-    - Implementations SHOULD return `percent_composed_string` but MAY return `formurl_composed_string` (or combinations thereof).
 
 Notes:
 
@@ -86,18 +85,20 @@ Notes:
 
 - **Most component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`). Note that `$path` is always considered present (though it may be empty).
 
+- **The query component is a `composed_string`.** Emulating a form submission might require using form-url-encoded values, so the query component may be composed of form-url-encoded or percent-encoded values.
+
 ### _MutableUri_
 
 The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 
 - `?string $scheme { get; set; }`
-- `?encoded_string $host { get; set; }`
+- `?percent_encoded_string $host { get; set; }`
 - `?int $port { get; set; }`
-- `?encoded_string $user { get; set; }`
-- `?encoded_string $password { get; set; }`
-- `composed_string $path { get; set; }`
+- `?percent_encoded_string $user { get; set; }`
+- `?percent_encoded_string $password { get; set; }`
+- `percent_composed_string $path { get; set; }`
 - `?composed_string $query { get; set; }`
-- `?composed_string $fragment { get; set; }`
+- `?percent_composed_string $fragment { get; set; }`
 - `?query_params_array $queryParams { get; set; }`
 
 Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
@@ -115,26 +116,26 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 - `withScheme(?string $scheme) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$scheme` value.
 
-- `withUser(?encoded_string $user) : ImmutableUri`
+- `withUser(?percent_encoded_string $user) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$user` value.
 
-- `withPassword(?encoded_string $password) : ImmutableUri`
+- `withPassword(?percent_encoded_string $password) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
 
-- `withHost(?encoded_string $host) : ImmutableUri`
+- `withHost(?percent_encoded_string $host) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
 
 - `withPort(?int $port) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
 
-- `withPath(composed_string $path) : ImmutableUri`
+- `withPath(percent_composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
 
 - `withQuery(?composed_string $query) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(?composed_string $fragment) : ImmutableUri`
+- `withFragment(?percent_composed_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
 
 - `withQueryParams(?query_params_array $queryParams) : ImmutableUri`
@@ -153,13 +154,13 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
     ```php
     newUri(
         ?string $scheme = null,
-        ?encoded_string $user = null,
-        ?encoded_string $password = null,
-        ?encoded_string $host = null,
+        ?percent_encoded_string $user = null,
+        ?percent_encoded_string $password = null,
+        ?percent_encoded_string $host = null,
         ?int $port = null,
-        composed_string $path = '',
+        percent_composed_string $path = '',
         ?composed_string $query = null,
-        ?composed_string $fragment = null,
+        ?percent_composed_string $fragment = null,
     ) : Uri
     ```
 
@@ -186,7 +187,7 @@ Implementations with this marker interface MUST conform to [RFC 3987][].
 The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static analysis:
 
 - `composed_string`
-    - A concatenation of `string`s and `encoded_string`s.
+    - A concatenation of `encoded_string`s with component-appropriate `string` separators.
 
 - `decoded_string`
     - The result of decoding an `encoded_string`.
@@ -195,7 +196,7 @@ The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static 
     - A `formurl_encoded_string` or `percent_encoded_string`.
 
 - `formurl_composed_string`
-    - A concatenation of `string`s and `formurl_encoded_string`s.
+    - A concatenation of `formurl_encoded_string`s with component-appropriate `string` separators.
 
 - `formurl_encoded_string`
     - An `application/x-www-form-urlencoded` string, with  `+` for the space character.
@@ -204,7 +205,7 @@ The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static 
     - The array return from [`parse_url()`][].
 
 - `percent_composed_string`
-    - A concatenation of `string`s and `percent_encoded_string`s.
+    - A concatenation of `percent_encoded_string`s with component-appropriate `string` separators.
 
 - `percent_encoded_string`
     - A percent-encoded string, with `%20` for the space character.

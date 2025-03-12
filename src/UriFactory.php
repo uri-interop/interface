@@ -5,17 +5,18 @@ namespace UriInterop\Interface;
 
 /**
  * @phpstan-import-type composed_string from UriTypeAliases
- * @phpstan-import-type encoded_string from UriTypeAliases
+ * @phpstan-import-type percent_composed_string from UriTypeAliases
+ * @phpstan-import-type percent_encoded_string from UriTypeAliases
  */
 interface UriFactory
 {
     /**
-     * @param ?encoded_string $user
-     * @param ?encoded_string $password
-     * @param ?encoded_string $host
-     * @param composed_string $path
+     * @param ?percent_encoded_string $user
+     * @param ?percent_encoded_string $password
+     * @param ?percent_encoded_string $host
+     * @param percent_composed_string $path
      * @param ?composed_string $query
-     * @param ?composed_string $fragment
+     * @param ?percent_composed_string $fragment
      */
     public function newUri(
         ?string $scheme = null,
