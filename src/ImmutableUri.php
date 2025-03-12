@@ -6,7 +6,6 @@ namespace UriInterop\Interface;
 /**
  * @phpstan-import-type composed_string from UriTypeAliases
  * @phpstan-import-type encoded_string from UriTypeAliases
- * @phpstan-import-type path_segments_array from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
 interface ImmutableUri extends Uri
@@ -51,9 +50,6 @@ interface ImmutableUri extends Uri
      * Returns a new instance of the _ImmutableUri_ with the modified `$path`
      * value.
      *
-     * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
-     * modified, the other MUST be modified accordingly.
-     *
      * @param composed_string $path
      */
     public function withPath(string $path) : ImmutableUri;
@@ -76,17 +72,6 @@ interface ImmutableUri extends Uri
      * @param ?composed_string $fragment
      */
     public function withFragment(?string $fragment) : ImmutableUri;
-
-    /**
-     * Returns a new instance of the _ImmutableUri_ with the modified
-     * `$pathSegments` value.
-     *
-     * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
-     * modified, the other MUST be modified accordingly.
-     *
-     * @param path_segments_array $pathSegments
-     */
-    public function withPathSegments(array $pathSegments) : ImmutableUri;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified

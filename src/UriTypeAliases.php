@@ -25,8 +25,6 @@ namespace UriInterop\Interface;
  *    fragment?:string
  * }
  *
- * @phpstan-type path_segments_array array<int, decoded_string>
- *
  * @phpstan-type percent_composed_string string
  *
  * @phpstan-type percent_encoded_string string

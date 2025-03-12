@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace UriInterop\Interface;
 
 /**
- * Implementations MUST keep `$path` and `$pathSegments` in sync; if one is
- * modified, the other MUST be modified accordingly.
- *
  * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
  * modified, the other MUST be modified accordingly.
  */
@@ -51,11 +48,6 @@ interface MutableUri extends Uri
      * @inheritdoc
      */
     public ?string $fragment { get; set; }
-
-    /**
-     * @inheritdoc
-     */
-    public array $pathSegments { get; set; }
 
     /**
      * @inheritdoc

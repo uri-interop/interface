@@ -64,10 +64,6 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - The fragment component value; does not include the `#` separator.
     - Implementations MUST report this value as `null` if the fragment component is not present.
 
-- `path_segments_array $pathSegments { get; }`
-    - The path component value represented as a sequential array.
-    - Implementations MUST report this value as `null` if the path component is not present.
-
 - `?query_params_array $queryParams { get; }`
     - The query component value represented an associative array.
     - Implementations MUST report this value as `null` if the query component is not present.
@@ -86,9 +82,9 @@ The _Uri_ interface affords readability and recomposition of URI components usin
 
 Notes:
 
-- **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams` and `$pathSegments` properties look more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
+- **These are property get hooks, not getter methods.** The property values are straightforward and require little-to-no logic around getting in most cases. Further, use of the `$queryParams`  property looks more like idiomatic PHP; e.g., `$uri->queryParams['foo'] ?? 'bar'` and not `$uri->queryParams()['foo']` or `$uri->queryParams('foo', 'bar')`.
 
-- **Most component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`). Note that `$path` and `$pathSegments` are always considered present (though they may be empty).
+- **Most component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`). Note that `$path` is always considered present (though it may be empty).
 
 ### _MutableUri_
 
@@ -102,10 +98,7 @@ The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
 - `composed_string $path { get; set; }`
 - `?composed_string $query { get; set; }`
 - `?composed_string $fragment { get; set; }`
-- `path_segments_array $pathSegments { get; set; }`
 - `?query_params_array $queryParams { get; set; }`
-
-Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
 Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
@@ -136,7 +129,6 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 
 - `withPath(composed_string $path) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
-    - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
 - `withQuery(?composed_string $query) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
@@ -144,10 +136,6 @@ The _ImmutableUri_ interface extends _Uri_ to afford these methods:
 
 - `withFragment(?composed_string $fragment) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
-
-- `withPathSegments(path_segments_array $pathSegments) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$pathSegments` value.
-    - Implementations MUST keep `$path` and `$pathSegments` in sync; if one is modified, the other MUST be modified accordingly.
 
 - `withQueryParams(?query_params_array $queryParams) : ImmutableUri`
     - Returns a new instance of the _ImmutableUri_ with the modified `$queryParams` value.
@@ -214,9 +202,6 @@ The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static 
 
 - `parse_url_array`
     - The array return from [`parse_url()`][].
-
-- `path_segments_array`
-    - A sequential array of `decoded_string`s.
 
 - `percent_composed_string`
     - A concatenation of `string`s and `percent_encoded_string`s.
