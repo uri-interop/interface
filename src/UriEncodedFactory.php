@@ -8,7 +8,7 @@ namespace UriInterop\Interface;
  * @phpstan-import-type percent_composed_string from UriTypeAliases
  * @phpstan-import-type percent_encoded_string from UriTypeAliases
  */
-interface UriFactory
+interface UriEncodedFactory extends UriEncoded
 {
     /**
      * @param ?percent_encoded_string $user
@@ -27,5 +27,5 @@ interface UriFactory
         string $path = '',
         ?string $query = null,
         ?string $fragment = null,
-    ) : Uri;
+    ) : UriEncoded&StringableComponents;
 }

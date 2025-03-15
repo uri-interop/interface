@@ -3,7 +3,7 @@
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat-square)](https://github.com/php-pds/skeleton)
 [![PDS Composer Script Names](https://img.shields.io/badge/pds-composer--script--names-blue?style=flat-square)](https://github.com/php-pds/composer-script-names)
 
-Uri-Interop publishes a standard set of interoperable URI interfaces for PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
+Uri-Interop publishes a standard set of interoperable URI and IRI interfaces for PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
@@ -11,27 +11,32 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines separate interfaces to afford reading and modifying URI component values:
+Uri-Interop defines separate interfaces to afford reading and modifying URI and IRI component values:
 
-- [_Uri_](#uri) affords reading of the URI component values and recomposing them into a string.
-- [_MutableUri_](#mutableuri) extends _Uri_ to afford direct modification of component values.
-- [_ImmutableUri_](#immutableuri) extends _Uri_ to afford immutable modification of component values.
+- [_StringableComponents_][] affords reading of the component values and recomposing them into a string.
+- [_MutableComponents_][] extends [_StringableComponents_][] to afford direct modification of component values.
+- [_ImmutableComponents_][] extends [_StringableComponents_][] to afford immutable modification of component values.
 
-Uri-Interop defines factory and parser interfaces:
+Uri-Interop defines two marker interfaces to indicate the expected character composition and percent-encoding rules:
 
-- [_UriFactory_](#urifactory) affords creating a new URI instance from URI component values.
-- [_UriParser_](#uriparser) affords creating a new URI instance from a URI string.
+- [_UriEncoded_][] marks implementations that are expected to work with ASCII characters only, per [RFC 3986][].
+- [_IriEncoded_][] marks implementations that are expected to work with characters from the Universal Character Set (Unicode/ISO 10646) per [RFC 3987][].
 
-Uri-Interop defines these marker interfaces to codify expectations around RFC compliance:
+Uri-Interop defines factory and parser interfaces for URIs:
 
-- [_Rfc3986Compliant_](#rfc3986compliant) marks any of the other interfaces to indicate [RFC 3986][] compliance.
-- [_Rfc3987Compliant_](#rfc3987compliant) marks any of the other interfaces to indicate [RFC 3987][] compliance.
+- [_UriEncodedFactory_][] affords creating a new URI instance from URI component values.
+- [_UriEncodedParser_][] affords creating a new URI instance from a URI string.
+
+Uri-Interop defines factory and parser interfaces for IRIs:
+
+- [_IriEncodedFactory_][] affords creating a new IRI instance from IRI component values.
+- [_IriEncodedParser_][] affords creating a new IRI instance from an IRI string.
 
 Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAliases_](#uritypealiases), to aid static analysis.
 
-### _Uri_
+### _StringableComponents_
 
-The _Uri_ interface affords readability and recomposition of URI components using these properties and methods:
+The [_StringableComponents_][] interface affords readability and recomposition of URI and IRI components using these properties and methods:
 
 - `?string $scheme { get; }`
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
@@ -46,7 +51,7 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - Implementations MUST report this value as `null` if the password component is not present.
 
 - `?percent_encoded_string $host { get; }`
-    - The host component value (e.g. `www.example.net`, `127.0.0.1`, `::1`, and so on).
+    - The host component value (e.g. `www.example.net`, `127.0.0.1`, `[::1]`, and so on).
     - Implementations MUST report this value as `null` if the host component is not present.
 
 - `?int $port { get; }`
@@ -69,11 +74,11 @@ The _Uri_ interface affords readability and recomposition of URI components usin
     - Implementations MUST report this value as `null` if the query component is not present.
 
 - `?percent_composed_string $userInfo { get; }`
-    - The recomposed `$user` and `$password` (e.g. as per [RFC 3986][]); does not include the `@` separator.
+    - The recomposed `$user` and `$password` (as per [RFC 3986][]); does not include the `@` separator.
     - Implementations MUST report this value as `null` if both `$user` and `$password` are `null`.
 
 - `?percent_composed_string $authority { get; }`
-    - The recomposed `$userInfo`, `$host`, and `$port` (e.g. as per [RFC 3986][]); does not include the `//` separator.
+    - The recomposed `$userInfo`, `$host`, and `$port` (as per [RFC 3986][]); does not include the `//` separator.
     - Implementations MUST report this value as `null` if `$userInfo`, `$host`, and `$port` are all `null`.
 
 - `__toString() : composed_string`
@@ -85,11 +90,11 @@ Notes:
 
 - **Most component values are nullable.** This preserves the distinction between the state of a component that is present but empty (e.g. as by an empty string) and that of a component not being present at all (represented by `null`). Note that `$path` is always considered present (though it may be empty).
 
-- **The query component is a `composed_string`.** Emulating a form submission might require using form-url-encoded values, so the query component may be composed of form-url-encoded or percent-encoded values.
+- **The query component is a `composed_string`.** Emulating a form submission might require using form-url-encoded values, so the query component may be composed of form-url-encoded values or percent-encoded values.
 
-### _MutableUri_
+### _MutableComponents_
 
-The _MutableUri_ interface extends _Uri_ to afford these property set hooks:
+The [_MutableComponents_][] interface extends [_StringableComponents_][] to afford these property set hooks:
 
 - `?string $scheme { get; set; }`
 - `?percent_encoded_string $host { get; set; }`
@@ -109,46 +114,62 @@ Notes:
 
 - **There are no property set hooks for `$userInfo` or `$authority`.** Because these are combined from other component values, they are not modified directly.
 
-### _ImmutableUri_
+### _ImmutableComponents_
 
-The _ImmutableUri_ interface extends _Uri_ to afford these methods:
+The [_ImmutableComponents_][] interface extends [_StringableComponents_][] to afford these methods:
 
-- `withScheme(?string $scheme) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$scheme` value.
+- `withScheme(?string $scheme) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$scheme` value.
 
-- `withUser(?percent_encoded_string $user) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$user` value.
+- `withUser(?percent_encoded_string $user) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$user` value.
 
-- `withPassword(?percent_encoded_string $password) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$password` value.
+- `withPassword(?percent_encoded_string $password) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$password` value.
 
-- `withHost(?percent_encoded_string $host) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$host` value.
+- `withHost(?percent_encoded_string $host) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$host` value.
 
-- `withPort(?int $port) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$port` value.
+- `withPort(?int $port) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$port` value.
 
-- `withPath(percent_composed_string $path) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$path` value.
+- `withPath(percent_composed_string $path) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$path` value.
 
-- `withQuery(?composed_string $query) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$query` value.
+- `withQuery(?composed_string $query) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(?percent_composed_string $fragment) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$fragment` value.
+- `withFragment(?percent_composed_string $fragment) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$fragment` value.
 
-- `withQueryParams(?query_params_array $queryParams) : ImmutableUri`
-    - Returns a new instance of the _ImmutableUri_ with the modified `$queryParams` value.
+- `withQueryParams(?query_params_array $queryParams) : ImmutableComponents`
+    - Returns a new instance of the [_ImmutableComponents_][] with the modified `$queryParams` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 Notes:
 
 - **There are no methods for `withUserInfo()` or `withAuthority()`.** Because these are combined from other property values, they are not modified directly.
 
-### _UriFactory_
+### _UriEncoded_
 
-The _UriFactory_ interface affords creating a new _Uri_ instance from parsed component values:
+The [_UriEncoded_] interface marks implementations where the component values are expected to consist only of ASCII characters. It defines no additional properties or methods.
+
+Notes:
+
+**This marker interface indicates a URI implementation.** Component values, parsing and recomposition, and percent-encoding strategies are expected to comply with [RFC 3986][].
+
+### _IriEncoded_
+
+The [_IriEncoded_] interface marks implementations where the component values are expected to consist of characters from the Universal Character Set (Unicode/ISO 10646) as per [RFC 3987][], instead of only ASCII characters. It defines no additional properties or methods.
+
+Notes:
+
+**This marker interface indicates an IRI implementation.** Component values, parsing and recomposition, and percent-encoding strategies are expected to comply with [RFC 3987][].
+
+### _UriEncodedFactory_
+
+The [_UriEncodedFactory_][] interface extends [_UriEncoded_][] to afford creating a new instance of [_UriEncoded_][]_&_[_StringableComponents_][] from parsed component values:
 
 -
     ```php
@@ -161,30 +182,52 @@ The _UriFactory_ interface affords creating a new _Uri_ instance from parsed com
         percent_composed_string $path = '',
         ?composed_string $query = null,
         ?percent_composed_string $fragment = null,
-    ) : Uri
+    ) : UriEncoded&StringableComponents
     ```
 
-### _UriParser_
+### _UriEncodedParser_
 
-The _UriParser_ interface affords creating a new _Uri_ instance from a URI string:
+The [_UriEncodedParser_][] interface extends [_UriEncoded_][] to afford creating a new instance of [_UriEncoded_][]_&_[_StringableComponents_][] from a URI string:
 
-- `parseUri(string|Stringable $uriString) : Uri`
+- `parseUri(string|Stringable $uriString) : UriEncoded&StringableComponents`
 
 Notes:
 
-- **The parser returns a new _Uri_ instance instead of an array of component values.** This reduces the number of steps involved in creating a new _Uri_ instance. If needed, _Uri_ instance properties can be used in place of an array of component values.
+- **The parser returns a new instance of [_UriEncoded_][]_&_[_StringableComponents_][] instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
 
-### _Rfc3986Compliant_
+- **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using an [RFC 3986][]-compliant approach instead.
 
-Implementations with this marker interface MUST conform to [RFC 3986][].
+### _IriEncodedFactory_
 
-### _Rfc3987Compliant_
+The [_IriEncodedFactory_][] interface extends [_IriEncoded_][] to afford creating a new instance of [_IriEncoded_][]_&_[_StringableComponents_][] from parsed component values:
 
-Implementations with this marker interface MUST conform to [RFC 3987][].
+-
+    ```php
+    newIri(
+        ?string $scheme = null,
+        ?percent_encoded_string $user = null,
+        ?percent_encoded_string $password = null,
+        ?percent_encoded_string $host = null,
+        ?int $port = null,
+        percent_composed_string $path = '',
+        ?composed_string $query = null,
+        ?percent_composed_string $fragment = null,
+    ) : IriEncoded&StringableComponents
+    ```
+
+### _IriEncodedParser_
+
+The [_IriEncodedParser_][] interface extends [_IriEncoded_][] to afford creating a new instance of [_IriEncoded_][]_&_[_StringableComponents_][] from a URI string:
+
+- `parseIri(string|Stringable $iriString) : IriEncoded&StringableComponents`
+
+Notes:
+
+- **The parser returns a new instance of [_IriEncoded_][]_&_[_StringableComponents_][] instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
 
 ### _UriTypeAliases_
 
-The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static analysis:
+The [_UriTypeAliases_][] interface defines these PHPStan type aliases to aid static analysis:
 
 - `composed_string`
     - A concatenation of `encoded_string`s with component-appropriate `string` separators.
@@ -215,14 +258,16 @@ The _UriTypeAliases_ interface defines these PHPStan type aliases to aid static 
 
 Notes:
 
-- **Native PHP functions will suffice for the type aliases.** Implementations MAY provide their own alternative functionality.
+- **Native PHP functions will suffice for the type aliases regarding [_UriEncoded_][] components.** Implementations MAY provide their own alternative functionality.
 
     - [`http_build_query()`][] with `encoding_type: PHP_QUERY_1738` will encode each space character as `+`, returning a `formurl_encoded_string`.
-    - [`http_build_query()`][] with `encoding_type: PHP_QUERY_3986` will encode each space character as `%20`, returning a `percent_encoded_string`.
-    - [`parse_str()`][] will decode both `+` and `%20` to a space character, returning a `query_params_array`.
-    - [`rawurlencode()`][]  will encode each space character as `%20`, returning a `percent_encoded_string`.
+    - [`http_build_query()`][] with `encoding_type: PHP_QUERY_3986` will encode each space character as `%20`, returning a `percent_encoded_string` for the relevant [_UriEncoded_][] components.
+    - [`parse_str()`][] will decode both `+` and `%20` to a space character, returning a `query_params_array` for the relevant [_UriEncoded_][] components.
+    - [`rawurlencode()`][]  will encode each space character as `%20`, returning a `percent_encoded_string` for the relevant [_UriEncoded_][] components.
     - [`urldecode()`][] will decode both `+` and `%20` to a space character, returning a `decoded_string`.
     - [`urlencode()`][]  will encode each space character as `+`, returning a `formurl_encoded_string`.
+
+- **Percent-encoding requirements are different for [_UriEncoded_][] and [_IriEncoded_][] components.** UCS [_IriEncoded_][] components need percent-encoding on a different of characters than ASCII-only [_UriEncoded_][] components. Please consult the relevant RFCs for the expectations here.
 
 ## Implementations
 
@@ -260,6 +305,16 @@ Earlier drafts of these standard interfaces included a [WHATWG-URL][] marker. Ho
 
 * * *
 
+[_ImmutableComponents_]: #immutablecomponents
+[_IriEncoded_]: #iriencoded
+[_IriEncodedFactory_]: #iriencodedfactory
+[_IriEncodedParser_]: #iriencodedparser
+[_MutableComponents_]: #mutablecomponents
+[_StringableComponents_]: #stringablecomponents
+[_UriEncoded_]: #uriencoded
+[_UriEncodedFactory_]: #uriencodedfactory
+[_UriEncodedParser_]: #uriencodedparser
+[_UriTypeAliases_]: #uritypealiases
 [`http_build_query()`]: https://php.net/http_build_query
 [`parse_str()`]: https://php.net/parse_str
 [`parse_url()`]: https://php.net/parse_url

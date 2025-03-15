@@ -17,7 +17,7 @@ use Stringable;
  * @phpstan-import-type percent_encoded_string from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
-interface Uri extends Stringable
+interface StringableComponents extends Stringable
 {
     /**
      * The scheme component value (e.g., `https` or `urn`); does not include
