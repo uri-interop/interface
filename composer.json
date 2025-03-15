@@ -1,7 +1,7 @@
 {
     "name": "uri-interop/interface",
     "description": "",
-    "keywords": [],
+    "keywords": ["uri", "iri", "rfc 3986", "rfc 3987", "rfc3986", "rfc3987"],
     "license": "MIT",
     "homepage": "https://github.com/uri-interop/interface",
     "authors": [
