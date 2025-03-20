@@ -1,6 +1,6 @@
 # Research
 
-Uri-Interop is based on research including the following 15 projects:
+Uri-Interop is based on research including the following 17 projects:
 
 - [amphp/url](https://github.com/amphp/uri/blob/master/src/Uri.php) (amphp)
 - [aura/uri](https://github.com/auraphp/Aura.Uri/blob/2.x/src/Url.php) (aura)
@@ -11,10 +11,12 @@ Uri-Interop is based on research including the following 15 projects:
 - [juststeveking/uri-builder](https://github.com/JustSteveKing/uri-builder/blob/main/src/Uri.php) (justking)
 - [laminas/laminas-uri](https://github.com/laminas/laminas-uri/blob/2.14.x/src/UriInterface.php) (laminas)
 - [league/uri](https://github.com/thephpleague/uri/blob/master/Uri.php) (league)
+- [ml/iri](https://github.com/lanthaler/IRI) (mliri)
 - [nette/http](https://github.com/nette/http/blob/master/src/Http/Url.php) (nette)
 - [opis/uri](https://github.com/opis/uri/blob/master/src/Uri.php) (opis)
 - [pear/net_url2](https://github.com/pear/Net_URL2/blob/master/Net/URL2.php) (pear)
 - [psr/http-message](https://github.com/php-fig/http-message/blob/master/src/UriInterface.php) (psr)
+- [rmccue/requests](https://github.com/WordPress/Requests/blob/develop/src/Iri.php) (rmccue)
 - [xp-forge/uri](https://github.com/xp-forge/uri/blob/master/src/main/php/util/URI.class.php) (xpforge)
 - [zenstruck/uri](https://github.com/zenstruck/uri/blob/2.x/src/Uri.php) (zenstr)
 
@@ -37,10 +39,12 @@ The projects offer varying levels of mutability:
 | justking |          |           | X       |
 | laminas  |          |           | X       |
 | league   |          | X         |         |
+| mliri    | X        |           |         |
 | nette    |          | X         | X       |
 | opis     | X        |           |         |
 | pear     |          |           | X       |
 | psr      |          | X         |         |
+| rmccue   |          |           | X       |
 | xpforge  | X        |           |         |
 | zenstr   |          | X         |         |
 
@@ -72,10 +76,12 @@ Most projects provide access to a `user`(8) or `username` (5) component, either 
 | justking |        |            | X    |
 | laminas  | X      |            |      |
 | league   |        | X          |      |
+| mliri    |        |            | X    |
 | nette    | X      |            |      |
 | opis     | X      |            |      |
 | pear     | X      |            |      |
 | psr      |        |            | X    |
+| rmccue   |        |            | X    |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
@@ -94,10 +100,12 @@ Most projects provide acccess to a `pass` (5) or `password` (8) component, eithe
 | justking |        |            | X    |
 | laminas  |        | X          |      |
 | league   |        | X          |      |
+| mliri    |        |            | X    |
 | nette    |        | X          |      |
 | opis     | X      |            |      |
 | pear     |        | X          |      |
 | psr      |        |            | X    |
+| rmccue   |        |            | X    |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
@@ -116,14 +124,14 @@ The `port` value is always an integer, while the other components are always str
 | justking |        |      |          |      | X    |      |       |          |
 | laminas  | X      | X    | X        | X    | X    | X    | X     | X        |
 | league   | X      | X    | X        | X    | X    |      | X     | X        |
+| mliri    | X      | X    | X        | X    | X    |      | X     | X        |
 | nette    |        |      |          |      | X    |      |       |          |
 | opis     | X      | X    | X        | X    | X    | X    | X     | X        |
 | pear (1) | X      | X    | X        | X    | X    |      | X     | X        |
 | psr      |        |      | X        |      | X    |      |       |          |
+| rmccue   | X      | X    | X        | X    | X    |      | X     | X        |
 | xpforge  |        | X    | X        | X    | X    |      |       |          |
 | zenstr   |        | X    | X        |      | X    |      |       | X        |
-| -------- | ------ | ---- | -------- | ---- | ---- | ---- | ----- | -------- |
-| TOTALS   | 4      | 6    | 7        | 5    | 15   | 2    | 4     | 5        |
 
 (1) Pear uses `false` instead of `null` to the same effect.
 
@@ -135,7 +143,7 @@ The projects sometimes offer additional or computed URI components.
 
 ### Query As Array
 
-12 of the 15 projects offer the query string decoded into arrays of strings, either via a getter method or a property:
+12 of the 17 projects offer the query string decoded into arrays of strings, either via a getter method or a property:
 
 |          | Query (as array) |
 | -------- | ---------------- |
@@ -148,10 +156,12 @@ The projects sometimes offer additional or computed URI components.
 | justking | X                |
 | laminas  | X                |
 | league   |                  |
+| mliri    |                  |
 | nette    | X                |
 | opis     |                  |
 | pear     | X                |
 | psr      |                  |
+| rmccue   |                  |
 | xpforge  | X                |
 | zenstr   | X                |
 
@@ -187,16 +197,18 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | justking |                              |
 | laminas  |                              |
 | league   |                              |
+| mliri    |                              |
 | nette    |                              |
 | opis     |                              |
 | pear     |                              |
 | psr      |                              |
+| rmccue   |                              |
 | xpforge  |                              |
 | zenstr   | `Path::segments()`           |
 
 ### User Information Component
 
-7 of the 15 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
+9 of the 17 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
 
 |          | User Information |
 | -------- | ---------------- |
@@ -209,10 +221,12 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | justking |                  |
 | laminas  | X                |
 | league   | X                |
+| mliri    | X                |
 | nette    |                  |
 | opis     | X                |
 | pear     | X                |
 | psr      | X                |
+| rmccue   | X                |
 | xpforge  |                  |
 | zenstr   | X                |
 
@@ -223,6 +237,7 @@ When the user information component is offered, the "info" portion of the term i
 | ci4     |      | X    |
 | laminas | X    |      |
 | league  | X    |      |
+| mliri   | X    |      |
 | opis    | X    |      |
 | pear    |      | X    |
 | psr     |      | X    |
@@ -236,10 +251,11 @@ The ability to modify user information *per se* is present in only 4 of the proj
 | league  | `withUserInfo(?string $user, ?string $password = null)`                             |
 | pear    | `setUserinfo($userinfo, $password = false)`                                         |
 | psr     | `withUserInfo(string $user, ?string $password = null)`                              |
+| rmccue  | `set_userinfo(string $userinfo)`                             |
 
 ### Authority Component
 
-9 of the 15 projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
+11 of the 17 projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
 
 |          | Authority |
 | -------- | --------- |
@@ -252,16 +268,18 @@ The ability to modify user information *per se* is present in only 4 of the proj
 | justking |           |
 | laminas  |           |
 | league   | X         |
+| mliri    | X         |
 | nette    |           |
 | opis     | X         |
 | pear     | X         |
 | psr      | X         |
+| rmccue   | X         |
 | xpforge  | X         |
 | zenstr   | X         |
 
 When the authority component is offered, the term "authority" is always used.
 
-The ability to modify the authority value *per se* is not present in any project. The projects all opt to modify the sub-components of the authority independently.
+The ability to modify the authority value *per se* is present in only one project (rmccue). The other projects all opt to modify the sub-components of the authority independently.
 
 ## Parsing
 
@@ -280,10 +298,12 @@ These projects use these approaches to parsing URL component values.
 | justking | X           |          |          |      |
 | laminas  |             | X        |          |      |
 | league   |             | X        | X        |      |
+| mliri    |             | X        | X        |      |
 | nette    | X (2)       |          |          |      |
 | opis     |             | X        |          |      |
 | pear     |             | X        |          |      |
 | psr      |             |          |          | X    |
+| rmccue   |             | X        | X        |      |
 | xpforge  |             | X        |          |      |
 | zenstr   | X           |          |          |      |
 
@@ -305,6 +325,7 @@ These projects offer a public method to parse URI strings to their component val
 | justking | `Uri::fromString(string $uri) : Uri`                                                                 |
 | laminas  | `Uri::parse(string $uri) : Uri`                                                                      |
 | league   | `Uri::new(Stringable\|string $uri = '') : Uri`                                                       |
+| mliri    | `IRI::__construct(null\|string\|IRI $iri = null)`                                                    |
 | nette    | `Url::__construct(string\|Url\|UrlImmutable\|null $url = null)`                                      |
 | opis     | `Uri::create(string $uri, bool $normalize = false) : ?Uri`                                           |
 | pear     | `Net_URL2::__construct(string $url, array $options = array())`                                       |
@@ -328,10 +349,12 @@ The projects throw these PHP _Exception_ types when parsing a URI or validating 
 | justking | _InvalidArgumentException_ | _InvalidArgumentException_ |                                                                              |
 | laminas  | _InvalidArgumentException_ | _InvalidArgumentException_ | _Laminas\Uri\Exception\\{InvalidArgumentException, InvalidUriPartException_} |
 | league   |                            | _InvalidArgumentException_ | _League\Uri\Exceptions\SyntaxError_                                          |
+| mliri    | _InvalidArgumentException_ |                            |                                                                              |
 | nette    | _InvalidArgumentException_ |                            |                                                                              |
 | opis     |                            |                            |                                                                              |
 | pear     |                            |                            |                                                                              |
 | psr      |                            | _InvalidArgumentException_ |                                                                              |
+| rmccue   | _InvalidArgumentException_ |                            |                                                                              |
 | xpforge  | _Exception_                | _Exception_                | _lang\\{FormatException, IllegalStateException}_                             |
 | zenstr   | _InvalidArgumentException_ | _InvalidArgumentException_ |                                                                              |
 
