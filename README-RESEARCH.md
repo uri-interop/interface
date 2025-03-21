@@ -1,6 +1,6 @@
 # Research
 
-Uri-Interop is based on research including the following 17 projects:
+Uri-Interop is based on research including the following URI projects:
 
 - [amphp/url](https://github.com/amphp/uri/blob/master/src/Uri.php) (amphp)
 - [aura/uri](https://github.com/auraphp/Aura.Uri/blob/2.x/src/Url.php) (aura)
@@ -11,18 +11,20 @@ Uri-Interop is based on research including the following 17 projects:
 - [juststeveking/uri-builder](https://github.com/JustSteveKing/uri-builder/blob/main/src/Uri.php) (justking)
 - [laminas/laminas-uri](https://github.com/laminas/laminas-uri/blob/2.14.x/src/UriInterface.php) (laminas)
 - [league/uri](https://github.com/thephpleague/uri/blob/master/Uri.php) (league)
-- [ml/iri](https://github.com/lanthaler/IRI) (mliri)
 - [nette/http](https://github.com/nette/http/blob/master/src/Http/Url.php) (nette)
 - [opis/uri](https://github.com/opis/uri/blob/master/src/Uri.php) (opis)
 - [pear/net_url2](https://github.com/pear/Net_URL2/blob/master/Net/URL2.php) (pear)
 - [psr/http-message](https://github.com/php-fig/http-message/blob/master/src/UriInterface.php) (psr)
-- [rmccue/requests](https://github.com/WordPress/Requests/blob/develop/src/Iri.php) (rmccue)
 - [xp-forge/uri](https://github.com/xp-forge/uri/blob/master/src/main/php/util/URI.class.php) (xpforge)
 - [zenstruck/uri](https://github.com/zenstruck/uri/blob/2.x/src/Uri.php) (zenstr)
 
-Many other projects were considered but did not have an obvious URI or URL implementation.
+These IRI and WHATWG-URL projects are included as well, for their overlap with URI projects:
 
-Likewise, [rowbot/url](https://github.com/TRowbotham/URL-Parser/blob/master/src/URL.php) is a WHATWG-URL implementation, and is different-enough to warrant exclusion here. (A future or alternative interop standard may center on WHATWG-URL.)
+- [ml/iri](https://github.com/lanthaler/IRI) (mliri)
+- [rmccue/requests](https://github.com/WordPress/Requests/blob/develop/src/Iri.php) (rmccue)
+- [rowbot/url](https://github.com/TRowbotham/URL-Parser/blob/master/src/URL.php) (rowbot)
+
+Many other projects were considered but did not have an obviously relevant implementation.
 
 ## Mutability
 
@@ -45,6 +47,7 @@ The projects offer varying levels of mutability:
 | pear     |          |           | X       |
 | psr      |          | X         |         |
 | rmccue   |          |           | X       |
+| rowbot   |          |           | X       |
 | xpforge  | X        |           |         |
 | zenstr   |          | X         |         |
 
@@ -63,7 +66,7 @@ All of the projects provide a means to retrieve these URI components, either via
 
 ### User/Username
 
-Most projects provide access to a `user`(8) or `username` (5) component, either via a getter method or a property, but some do not provide it at all:
+Most projects provide access to a `user`or `username` component, either via a getter method or a property, but some do not provide it at all:
 
 |          | `user` | `username` | none |
 | -------- | ------ | ---------- | ---- |
@@ -82,12 +85,13 @@ Most projects provide access to a `user`(8) or `username` (5) component, either 
 | pear     | X      |            |      |
 | psr      |        |            | X    |
 | rmccue   |        |            | X    |
+| rowbot   |        | X          |      |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
 ### Pass/Password
 
-Most projects provide acccess to a `pass` (5) or `password` (8) component, either via a getter method or a property, but some do not provide it at all:
+Most projects provide acccess to a `pass` or `password` component, either via a getter method or a property, but some do not provide it at all:
 
 |          | `pass` | `password` | none |
 | -------- | ------ | ---------- | ---- |
@@ -106,12 +110,15 @@ Most projects provide acccess to a `pass` (5) or `password` (8) component, eithe
 | pear     |        | X          |      |
 | psr      |        |            | X    |
 | rmccue   |        |            | X    |
+| rowbot   |        | X          |      |
 | xpforge  |        | X          |      |
 | zenstr   |        | X          |      |
 
 ### Component Types
 
-The `port` value is always an integer, while the other components are always strings. The projects allow these components to be nullable:
+The `port` value is always an integer, while the other components are always strings.
+
+These projects allow the following components to be nullable:
 
 |          | Scheme | User | Password | Host | Port | Path | Query | Fragment |
 | -------- | ------ | ---- | -------- | ---- | ---- | ---- | ----- | -------- |
@@ -130,12 +137,22 @@ The `port` value is always an integer, while the other components are always str
 | pear (1) | X      | X    | X        | X    | X    |      | X     | X        |
 | psr      |        |      | X        |      | X    |      |       |          |
 | rmccue   | X      | X    | X        | X    | X    |      | X     | X        |
+| rowbot   |        |      |          |      | X    |      |       |          |
 | xpforge  |        | X    | X        | X    | X    |      |       |          |
 | zenstr   |        | X    | X        |      | X    |      |       | X        |
 
 (1) Pear uses `false` instead of `null` to the same effect.
 
-Aside from the `port`, there is no wide agreement on nullability, or even on which components should be nullable.
+### Component Encoding
+
+Almost all projects retain all basic URI component values in their encoded form. Only these projects retain some components in their decoded form:
+
+|          | Decoded                            |
+| -------- | ---------------------------------- |
+| aura     | all                                |
+| nette    | host, username, password, fragment |
+| zenstr   | fragment                           |
+
 
 ## Added URI Components
 
@@ -143,13 +160,13 @@ The projects sometimes offer additional or computed URI components.
 
 ### Query As Array
 
-12 of the 17 projects offer the query string decoded into arrays of strings, either via a getter method or a property:
+These projects offer the query string decoded into arrays of strings, either via a getter method or a property:
 
 |          | Query (as array) |
 | -------- | ---------------- |
 | amphp    | X                |
 | aura     | X                |
-| ci4      | X                |
+| ci4      |                  |
 | codezero | X                |
 | joomla   | X                |
 | josan    | X                |
@@ -162,6 +179,7 @@ The projects sometimes offer additional or computed URI components.
 | pear     | X                |
 | psr      |                  |
 | rmccue   |                  |
+| rowbot   |                  |
 | xpforge  | X                |
 | zenstr   | X                |
 
@@ -171,7 +189,6 @@ When the query is offered as an array, it is under various terms, with variation
 | -------- | ------------------------------ | ----- | ----- | ------ | ---------- | --------- |
 | amphp    | getAllQueryParameters()        |       |       |        | X          |           |
 | aura     | $query                         | X     |       |        |            |           |
-| ci4      | getquery_params_array()    |       | X     | X      |            |           |
 | codezero | getQuery()                     | X     |       |        |            |           |
 | joomla   | getQuery()                     | X     |       |        |            |           |
 | josan    | $parameters                    |       |       |        | X          |           |
@@ -203,12 +220,13 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | pear     |                              |
 | psr      |                              |
 | rmccue   |                              |
+| rowbot   |                              |
 | xpforge  |                              |
 | zenstr   | `Path::segments()`           |
 
 ### User Information Component
 
-9 of the 17 projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
+These projects offer a string of the combined username and password portions of the URI, [per RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.1), either via a getter method or a property:
 
 |          | User Information |
 | -------- | ---------------- |
@@ -227,6 +245,7 @@ These projects offer the path string decoded into an array (or equivalent) of se
 | pear     | X                |
 | psr      | X                |
 | rmccue   | X                |
+| rowbot   |                  |
 | xpforge  |                  |
 | zenstr   | X                |
 
@@ -243,7 +262,7 @@ When the user information component is offered, the "info" portion of the term i
 | psr     |      | X    |
 | zenstr  | X    |      |
 
-The ability to modify user information *per se* is present in only 4 of the projects; the method signature usually separates the user name from the password. (It is more common to modify the user name and password independently.)
+The ability to modify user information *per se* is present in few of the projects; the method signature usually separates the user name from the password. (It is more common to modify the user name and password independently.)
 
 |         | Method                                                                              |
 | ------- | ----------------------------------------------------------------------------------- |
@@ -255,7 +274,7 @@ The ability to modify user information *per se* is present in only 4 of the proj
 
 ### Authority Component
 
-11 of the 17 projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
+The following projects offer a combined string of the username, password, host, and port portions of the URI, [per the RFC](https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2), either via a getter method or a property.
 
 |          | Authority |
 | -------- | --------- |
@@ -274,6 +293,7 @@ The ability to modify user information *per se* is present in only 4 of the proj
 | pear     | X         |
 | psr      | X         |
 | rmccue   | X         |
+| rowbot   |           |
 | xpforge  | X         |
 | zenstr   | X         |
 
@@ -330,6 +350,7 @@ These projects offer a public method to parse URI strings to their component val
 | opis     | `Uri::create(string $uri, bool $normalize = false) : ?Uri`                                           |
 | pear     | `Net_URL2::__construct(string $url, array $options = array())`                                       |
 | psr      | `UriFactoryInterface::createUri(string $uri = '') : UriInterface`                                    |
+| rowbot   | `BasicURLParser::parse(USVStringInterface $input) : UrlRecord\|false`                                |
 | xpforge  | `Uri::__construct(string\|Creation $base, ?string $relative = null)`                                 |
 | zenstr   | `ParsedUri::new(ParsedUri\|string\|null $what = null) : ParsedUri`                                   |
 
@@ -355,6 +376,7 @@ The projects throw these PHP _Exception_ types when parsing a URI or validating 
 | pear     |                            |                            |                                                                              |
 | psr      |                            | _InvalidArgumentException_ |                                                                              |
 | rmccue   | _InvalidArgumentException_ |                            |                                                                              |
+| rowbot   |                            |                            |                                                                              |
 | xpforge  | _Exception_                | _Exception_                | _lang\\{FormatException, IllegalStateException}_                             |
 | zenstr   | _InvalidArgumentException_ | _InvalidArgumentException_ |                                                                              |
 

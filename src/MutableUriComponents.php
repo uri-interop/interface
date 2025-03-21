@@ -7,7 +7,7 @@ namespace UriInterop\Interface;
  * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
  * modified, the other MUST be modified accordingly.
  */
-interface MutableComponents extends StringableComponents
+interface MutableUriComponents extends UriComponents
 {
     /**
      * @inheritdoc
@@ -17,7 +17,7 @@ interface MutableComponents extends StringableComponents
     /**
      * @inheritdoc
      */
-    public ?string $user { get; set; }
+    public ?string $username { get; set; }
 
     /**
      * @inheritdoc
