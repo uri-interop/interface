@@ -17,7 +17,7 @@ use Stringable;
  * @phpstan-import-type percent_encoded_string from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
-interface StringableComponents extends Stringable
+interface UriComponents extends Stringable
 {
     /**
      * The scheme component value (e.g., `https` or `urn`); does not include
@@ -29,14 +29,14 @@ interface StringableComponents extends Stringable
     public ?string $scheme { get; }
 
     /**
-     * The user component value.
+     * The username component value.
      *
-     * Implementations MUST report this value as `null` if the user component
+     * Implementations MUST report this value as `null` if the username component
      * is not present.
      *
      * @var ?percent_encoded_string
      */
-    public ?string $user { get; }
+    public ?string $username { get; }
 
     /**
      * The password component value.
@@ -106,21 +106,21 @@ interface StringableComponents extends Stringable
     public ?array $queryParams { get; }
 
     /**
-     * The recomposed `$user` and `$password` (e.g. as per [RFC 3986][]); does
+     * The recomposed `$username` and `$password` (as per RFC 3986); does
      * not include the `@` separator.
      *
-     * Implementations MUST report this value as `null` if both `$user` and
+     * Implementations MUST report this value as `null` if both `$username` and
      * `$password` are `null`.
      *
      * @var ?percent_composed_string
      */
-    public ?string $userInfo { get; }
+    public ?string $userinfo { get; }
 
     /**
-     * The recomposed `$userInfo`, `$host`, and `$port` (e.g. as per
-     * [RFC 3986][]); does not include the `//` separator.
+     * The recomposed `$userinfo`, `$host`, and `$port` (as per
+     * RFC 3986); does not include the `//` separator.
      *
-     * Implementations MUST report this value as `null` if `$userInfo`,
+     * Implementations MUST report this value as `null` if `$userinfo`,
      * `$host`, and `$port` are all `null`.
      *
      * @var ?percent_composed_string
