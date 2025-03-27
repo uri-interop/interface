@@ -51,7 +51,6 @@ The following changes are the result of private review:
 
 - Removed WHATWG-URL considerations, and `rowbot` as a reference project.
 
-
 ## 1.0.0-dev1
 
 Ready for private review.
