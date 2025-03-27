@@ -1,5 +1,36 @@
 # Change Log
 
+## 1.0.0-alpha2
+
+Modifications from public and private review; extending public review period.
+
+- Stricter type hinting
+    - $path is no longer nullable (fixes #1)
+    - all properties are now encoded, as vs some being encoded and some not
+
+- Removed properties
+    - $pathSegments
+
+- Renamed properties and methods
+    - $user -> $username
+    - $userInfo -> $userinfo
+    - withUser() -> withUsername()
+
+- Updates to research
+    - re-added rowbot/url (WHATWG-URL)
+    - added ml/iri and rmccue/requests (IRI)
+
+- Removed marker interfaces, concentrating only on URIs and not IRIs
+    - Rfc3986Compliant
+    - Rfc3987Compliant
+
+- Renamed interfaces to ease implementation naming
+    - Uri -> UriComponents
+    - MutableUri -> MutableUriComponents
+    - ImmutableUri -> ImmutableUriComponents
+    - UriFactory -> UriComponentsFactory
+    - UriParser -> UriStringParser
+
 ## 1.0.0-alpha1
 
 Ready for public review.
