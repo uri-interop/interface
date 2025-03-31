@@ -9,13 +9,13 @@ namespace UriInterop\Interface;
  * @phpstan-import-type percent_encoded_string from UriTypeAliases
  * @phpstan-import-type query_params_array from UriTypeAliases
  */
-interface ImmutableUriComponents extends UriComponents
+interface ImmutableUriRecord extends UriRecord
 {
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$scheme`
      * value.
      */
-    public function withScheme(?string $scheme) : ImmutableUriComponents;
+    public function withScheme(?string $scheme) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$username`
@@ -23,7 +23,7 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?percent_encoded_string $username
      */
-    public function withUsername(?string $username) : ImmutableUriComponents;
+    public function withUsername(?string $username) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified
@@ -31,7 +31,7 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?percent_encoded_string $password
      */
-    public function withPassword(?string $password) : ImmutableUriComponents;
+    public function withPassword(?string $password) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$host`
@@ -39,13 +39,13 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?percent_encoded_string $host
      */
-    public function withHost(?string $host) : ImmutableUriComponents;
+    public function withHost(?string $host) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$port`
      * value.
      */
-    public function withPort(?int $port) : ImmutableUriComponents;
+    public function withPort(?int $port) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$path`
@@ -53,7 +53,7 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param percent_composed_string $path
      */
-    public function withPath(string $path) : ImmutableUriComponents;
+    public function withPath(string $path) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified `$query`
@@ -64,7 +64,7 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?composed_string $query
      */
-    public function withQuery(?string $query) : ImmutableUriComponents;
+    public function withQuery(?string $query) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified
@@ -72,7 +72,7 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?percent_composed_string $fragment
      */
-    public function withFragment(?string $fragment) : ImmutableUriComponents;
+    public function withFragment(?string $fragment) : ImmutableUriRecord;
 
     /**
      * Returns a new instance of the _ImmutableUri_ with the modified
@@ -83,5 +83,5 @@ interface ImmutableUriComponents extends UriComponents
      *
      * @param ?query_params_array $queryParams
      */
-    public function withQueryParams(?array $queryParams) : ImmutableUriComponents;
+    public function withQueryParams(?array $queryParams) : ImmutableUriRecord;
 }

@@ -7,5 +7,5 @@ use Stringable;
 
 interface UriStringParser
 {
-    public function parseUri(string|Stringable $uriString) : UriComponents;
+    public function parseUri(string|Stringable $uriString) : UriRecord;
 }

@@ -11,22 +11,22 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines separate interfaces to afford reading and modifying URI component values:
+Uri-Interop defines separate interfaces to afford reading and modifying a record of URI component values:
 
-- [_UriComponents_][] affords reading of the component values and recomposing them into a string.
-- [_MutableUriComponents_][] extends [_UriComponents_][] to afford direct modification of component values.
-- [_ImmutableUriComponents_][] extends [_UriComponents_][] to afford immutable modification of component values.
+- [_UriRecord_][] affords reading of the component values and recomposing them into a string.
+- [_MutableUriRecord_][] extends [_UriRecord_][] to afford direct modification of component values.
+- [_ImmutableUriRecord_][] extends [_UriRecord_][] to afford immutable modification of component values.
 
 Uri-Interop defines factory and parser interfaces for URIs:
 
-- [_UriComponentsFactory_][] affords creating a new instance of [_UriComponents_][] from URI component values.
-- [_UriStringParser_][] affords creating a new instance of [_UriComponents_][] from a URI string.
+- [_UriRecordFactory_][] affords creating a new [_UriRecord_][] instance from URI component values.
+- [_UriStringParser_][] affords creating a new [_UriRecord_][] instance from a URI string.
 
 Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAliases_][], to aid static analysis.
 
-### _UriComponents_
+### _UriRecord_
 
-The [_UriComponents_][] interface affords readability and recomposition of URI components using these properties and methods:
+The [_UriRecord_][] interface affords readability and recomposition of URI components using these properties and methods:
 
 - `?string $scheme { get; }`
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
@@ -82,9 +82,9 @@ Notes:
 
 - **The query component is a `composed_string`.** Emulating a form submission might require using form-url-encoded values, so the query component may be composed of form-url-encoded values or percent-encoded values.
 
-### _MutableUriComponents_
+### _MutableUriRecord_
 
-The [_MutableUriComponents_][] interface extends [_UriComponents_][] to define these property set hooks:
+The [_MutableUriRecord_][] interface extends [_UriRecord_][] to define these property set hooks:
 
 - `?string $scheme { get; set; }`
 - `?percent_encoded_string $host { get; set; }`
@@ -104,46 +104,46 @@ Notes:
 
 - **There are no property set hooks for `$userinfo` or `$authority`.** Because these are combined from other component values, they are not modified directly.
 
-### _ImmutableUriComponents_
+### _ImmutableUriRecord_
 
-The [_ImmutableUriComponents_][] interface extends [_UriComponents_][] to define these methods:
+The [_ImmutableUriRecord_][] interface extends [_UriRecord_][] to define these methods:
 
-- `withScheme(?string $scheme) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$scheme` value.
+- `withScheme(?string $scheme) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$scheme` value.
 
-- `withUsername(?percent_encoded_string $username) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$username` value.
+- `withUsername(?percent_encoded_string $username) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$username` value.
 
-- `withPassword(?percent_encoded_string $password) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$password` value.
+- `withPassword(?percent_encoded_string $password) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$password` value.
 
-- `withHost(?percent_encoded_string $host) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$host` value.
+- `withHost(?percent_encoded_string $host) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$host` value.
 
-- `withPort(?int $port) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$port` value.
+- `withPort(?int $port) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$port` value.
 
-- `withPath(percent_composed_string $path) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$path` value.
+- `withPath(percent_composed_string $path) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$path` value.
 
-- `withQuery(?composed_string $query) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$query` value.
+- `withQuery(?composed_string $query) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(?percent_composed_string $fragment) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$fragment` value.
+- `withFragment(?percent_composed_string $fragment) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$fragment` value.
 
-- `withQueryParams(?query_params_array $queryParams) : ImmutableUriComponents`
-    - Returns a new instance of the [_ImmutableUriComponents_][] with the modified `$queryParams` value.
+- `withQueryParams(?query_params_array $queryParams) : ImmutableUriRecord`
+    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$queryParams` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 Notes:
 
 - **There are no methods for `withUserInfo()` or `withAuthority()`.** Because these are combined from other property values, they are not modified directly.
 
-### _UriComponentsFactory_
+### _UriRecordFactory_
 
-The [_UriComponentsFactory_][] interface affords creating a new instance of [_UriComponents_][] from parsed component values:
+The [_UriRecordFactory_][] interface affords creating a new [_UriRecord_][] instance from parsed component values:
 
 -
     ```php
@@ -156,18 +156,18 @@ The [_UriComponentsFactory_][] interface affords creating a new instance of [_Ur
         percent_composed_string $path = '',
         ?composed_string $query = null,
         ?percent_composed_string $fragment = null,
-    ) : UriComponents
+    ) : UriRecord
     ```
 
 ### _UriStringParser_
 
-The [_UriStringParser_][] interface affords creating a new instance of [_UriComponents_][] from a URI string:
+The [_UriStringParser_][] interface affords creating a new [_UriRecord_][] instance from a URI string:
 
-- `parseUri(string|Stringable $uriString) : UriComponents`
+- `parseUri(string|Stringable $uriString) : UriRecord`
 
 Notes:
 
-- **The parser returns a new instance of [_UriComponents_][] instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
+- **The parser returns a new [_UriRecord_][] instance instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
 
 - **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using an [RFC 3986][]-compliant approach instead.
 
@@ -261,11 +261,11 @@ Despite this, [WHATWG-URL][] projects do have some overlap with URIs, and thus c
 
 * * *
 
-[_ImmutableUriComponents_]: #immutablecomponents
-[_MutableUriComponents_]: #mutablecomponents
-[_UriComponents_]: #stringablecomponents
-[_UriComponentsFactory_]: #uriencodedfactory
-[_UriStringParser_]: #uriencodedparser
+[_ImmutableUriRecord_]: #immutableurirecord
+[_MutableUriRecord_]: #mutableurirecord
+[_UriRecord_]: #urirecord
+[_UriRecordFactory_]: #urirecordfactory
+[_UriStringParser_]: #uristringparser
 [_UriTypeAliases_]: #uritypealiases
 [`http_build_query()`]: https://php.net/http_build_query
 [`parse_str()`]: https://php.net/parse_str
