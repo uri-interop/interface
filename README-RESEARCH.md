@@ -354,6 +354,35 @@ These projects offer a public method to parse URI strings to their component val
 | xpforge  | `Uri::__construct(string\|Creation $base, ?string $relative = null)`                                 |
 | zenstr   | `ParsedUri::new(ParsedUri\|string\|null $what = null) : ParsedUri`                                   |
 
+## Normalizing
+
+These projects offer a public method to normalize URI components (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2>):
+
+|          | Signature                                             | Notes                               |
+| -------- | ----------------------------------------------------- | ----------------------------------- |
+| amphp    | `Uri::normalize() : string`                           |                                     |
+| laminas  | `Uri::normalize() : Uri`                              | Mutates `$this`, returns `$this`    |
+| opis     | `Uri::normalizeComponents(array $components) : array` |                                     |
+| pear     | `Net_URL2::normalize() : void`                        | Mutates `$this`                     |
+| zenstr   | `Uri::normalize()`                                    | Clones `$this` without modification |
+
+## Resolving
+
+These projects offer a public method to resolve a relative URI reference (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-5>) -- though the base URI is sometime the instance being called, and sometimes the argument being passed:
+
+|           | Signature                                                                | Base URI   | Notes                           |
+| --------- |------------------------------------------------------------------------- | ---------- | ------------------------------- |
+| amphp     | `Uri::resolve(string $toResolve) : Uri`                                  | `$this`    | Returns a new instance          |
+| ci4       | `URI::resolveRelativeURI(string $uri) : URI`                             | `$this`    | Returns a new instance          |
+| laminas   | `Uri::resolve(Uri\|string $baseUri) : Uri`                               | `$baseUri` | Mutates $this, returns $this    |
+| league    | `BaseUri::resolve(Stringable\|string $uri) : static`                     | `$this`    | Returns a new instance          |
+| mliri     | `IRI::resolve(self\|string $relativeReference) : self`                   | `$this`    | Returns a new instance          |
+| nette     | `UrlImmutable::resolve(string $reference) : self`                        | `$this`    | Returns a new instance          |
+| opis      | `Uri::resolve($base, bool $normalize = false) : self`                    | `$base`    | Returns $this or a new instance |
+| pear      | `Net_URL2::resolve(Net_URL2\|string $reference) : self`                  | `$this`    | Returns a new instance          |
+| rmccue    | `Iri::absolutize(IRI\|string $base, IRI\|string $relative) : false\|Iri` | `$base`    | Returns a new instance          |
+| xp-forge  | `URI::resolve(string\|self $arg) : self`                                 | `$this`    | Returns $this or a new instance |
+
 
 ## Exceptions
 

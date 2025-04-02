@@ -17,10 +17,12 @@ Uri-Interop defines separate interfaces to afford reading and modifying a record
 - [_MutableUriRecord_][] extends [_UriRecord_][] to afford direct modification of component values.
 - [_ImmutableUriRecord_][] extends [_UriRecord_][] to afford immutable modification of component values.
 
-Uri-Interop defines factory and parser interfaces for URIs:
+Uri-Interop also defines interfaces for creating new URI instances:
 
-- [_UriRecordFactory_][] affords creating a new [_UriRecord_][] instance from URI component values.
-- [_UriStringParser_][] affords creating a new [_UriRecord_][] instance from a URI string.
+- [_UriRecordFactory_][] affords creating a [_UriRecord_][] instance from URI component values.
+- [_UriRecordNormalizer_][] affords creating a normalized instance of a [_UriRecord_][].
+- [_UriRecordResolver_][] affords creating a [_UriRecord_][] from a pair of base and relative [_UriRecord_][]s.
+- [_UriStringParser_][] affords creating a [_UriRecord_][] instance from a URI string.
 
 Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAliases_][], to aid static analysis.
 
@@ -159,6 +161,30 @@ The [_UriRecordFactory_][] interface affords creating a new [_UriRecord_][] inst
     ) : UriRecord
     ```
 
+### _UriRecordNormalizer_
+
+The [_UriRecordNormalizer_][] interface affords creating a normalized [_UriRecord_][] instance (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2>):
+
+-
+    ```php
+    normalizeUri(UriRecord $uri) : UriRecord
+    ```
+
+Implementations of `normalizeUri()` MUST return a new instance of [_UriRecord_][].
+
+
+### _UriRecordResolver_
+
+The [_UriRecordResolver_][] interface affords creating a new [_UriRecord_][] instance by resolving a relative URI reference against a base URI (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-5>):
+
+-
+    ```php
+    resolveUri(UriRecord $relative, UriRecord $base) : UriRecord
+    ```
+
+Implementations of `resolveUri()` MUST return a new instance of [_UriRecord_][].
+
+
 ### _UriStringParser_
 
 The [_UriStringParser_][] interface affords creating a new [_UriRecord_][] instance from a URI string:
@@ -233,7 +259,7 @@ Notes:
 
 ### Why `$username` and not `$user`?
 
-Among the researched projects, `$user` was the more common property name. Earlier drafts honored the majority. However, for symmetry with `$password` and `$userinfo`, reviewers found `$username` more suitable.
+Among the researched projects, `$user` was the more common property name. Earlier drafts honored the majority. However, for symmetry with `$password` and `$userinfo`, reviewers found `$username` more suitable. The fact that [WHATWG-URL][] specifies `username` strengthened that preference.
 
 ### Why `$password` and not `$pass`?
 
@@ -257,7 +283,16 @@ Despite this, [RFC 3987][] projects do have some overlap with URIs, and thus con
 
 Earlier drafts of these standard interfaces included a [WHATWG-URL][] marker. However, there are enough differences between [WHATWG-URL][] and the [RFC 3986][]-like behaviors of the researched projects to warrant exclusion from this standard.
 
-Despite this, [WHATWG-URL][] projects do have some overlap with URIs, and thus continue to inform Uri-Interop.
+Despite this, [WHATWG-URL][] does have some overlap with [RFC 3986][], and thus continues to inform Uri-Interop.
+
+### Why is there no `UriRecord::normalize()` interface method?
+
+Although a [_UriRecordNormalizer_][] is provided to afford normalizing any [_UriRecord_][], there is no interface that affords something like a `normalize()` method directly on a [_UriRecord_][]. Reviewers preferred being able to specify normalization logic independent from any particular [_UriRecord_][] implementation, especially when normalizing URIs from different implementors to compare them for equivalence.
+
+### Why is there no `UriRecord::resolve()` interface method?
+
+Although a [_UriRecordResolver_] is provided to afford resolving relative URI reference, there is no interface that affords something like a `resolve()` method directly on a [_UriRecord_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriRecord_][] implementation.
+
 
 * * *
 
@@ -265,6 +300,8 @@ Despite this, [WHATWG-URL][] projects do have some overlap with URIs, and thus c
 [_MutableUriRecord_]: #mutableurirecord
 [_UriRecord_]: #urirecord
 [_UriRecordFactory_]: #urirecordfactory
+[_UriRecordNormalizer_]: #urirecordnormalizer
+[_UriRecordResolver_]: #urirecordresolver
 [_UriStringParser_]: #uristringparser
 [_UriTypeAliases_]: #uritypealiases
 [`http_build_query()`]: https://php.net/http_build_query
