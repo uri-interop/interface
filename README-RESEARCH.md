@@ -364,7 +364,7 @@ These projects offer a public method to normalize URI components (cf. <https://d
 | laminas  | `Uri::normalize() : Uri`                              | Mutates `$this`, returns `$this`    |
 | opis     | `Uri::normalizeComponents(array $components) : array` |                                     |
 | pear     | `Net_URL2::normalize() : void`                        | Mutates `$this`                     |
-| zenstr   | `Uri::normalize()`                                    | Clones `$this` without modification |
+| zenstr   | `ParsedUri::normalize()`                              | Clones `$this` without modification |
 
 ## Resolving
 
