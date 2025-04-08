@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.0.0-alpha3
+
+Modifications from public and private review; extending public review period.
+
+- Renamed interfaces from UriComponents to UriRecord, a la WHATWG-URL UrlRecord.
+
+- Fixed query_params_array type alias.
+
+- Added UriRecordNormalizer::normalizeUri().
+
+- Added UriRecordResolver::resolveUri().
+
+
 ## 1.0.0-alpha2
 
 Modifications from public and private review; extending public review period.
