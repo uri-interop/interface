@@ -9,8 +9,7 @@ use Stringable;
  * Implementations MAY sanitize component values (e.g. by applying `trim()`).
  *
  * Implementations MAY validate component values; the implementation MUST throw
- * _LogicException_ (or an extension thereof) when a component value is
- * invalid.
+ * a _UriThrowable_ when a component value is invalid.
  *
  * @phpstan-import-type composed_string from UriTypeAliases
  * @phpstan-import-type percent_composed_string from UriTypeAliases

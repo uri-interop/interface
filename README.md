@@ -24,6 +24,8 @@ Uri-Interop also defines interfaces for creating new URI instances:
 - [_UriRecordResolver_][] affords creating a [_UriRecord_][] from a pair of base and relative [_UriRecord_][]s.
 - [_UriStringParser_][] affords creating a [_UriRecord_][] instance from a URI string.
 
+Uri-Interop defines a marker interface, [_UriThrowable_][], for marking an [_Exception_][] as URI-related.
+
 Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAliases_][], to aid static analysis.
 
 ### _UriRecord_
@@ -197,6 +199,10 @@ Notes:
 
 - **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using an [RFC 3986][]-compliant approach instead.
 
+### _UriThrowable_
+
+The _UriThrowable_ interface extends [_Throwable_][] to mark an [_Exception_][] as URI-related. It adds no class members.
+
 ### _UriTypeAliases_
 
 The [_UriTypeAliases_][] interface defines these PHPStan type aliases to aid static analysis:
@@ -243,7 +249,7 @@ Notes:
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
-Implementations MAY validate component values; the implementation MUST throw _LogicException_ (or an extension thereof) when a component value is invalid.
+Implementations MAY validate component values; the implementation MUST throw a [_UriThrowable_][] when a component value is invalid.
 
 Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
 
@@ -296,13 +302,16 @@ Although a [_UriRecordResolver_] is provided to afford resolving relative URI re
 
 * * *
 
+[_Exception_]: https://php.net/Exception
 [_ImmutableUriRecord_]: #immutableurirecord
 [_MutableUriRecord_]: #mutableurirecord
+[_Throwable_]: https://php.net/Throwable
 [_UriRecord_]: #urirecord
 [_UriRecordFactory_]: #urirecordfactory
 [_UriRecordNormalizer_]: #urirecordnormalizer
 [_UriRecordResolver_]: #urirecordresolver
 [_UriStringParser_]: #uristringparser
+[_UriThrowable_]: #urithrowable
 [_UriTypeAliases_]: #uritypealiases
 [`http_build_query()`]: https://php.net/http_build_query
 [`parse_str()`]: https://php.net/parse_str
