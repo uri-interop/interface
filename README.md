@@ -245,9 +245,9 @@ Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
 Implementations MAY validate component values; the implementation MUST throw _LogicException_ (or an extension thereof) when a component value is invalid.
 
-Implementations MAY define additional class members not defined in these interfaces.
-
 Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
+
+Implementations MAY define additional class members not defined in these interfaces; implementations advertised as readonly or immutable MUST make those additional class members deeply readonly or immutable.
 
 Notes:
 
