@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta1
+
+- Renamed interfaces from UriRecord to UriStruct, reducing ease-of-confusion with WHATWG-URL UrlRecord implementations.
+
+- Introduced UriThrowable.
+
 ## 1.0.0-alpha3
 
 Modifications from public and private review; extending public review period.
@@ -11,7 +17,6 @@ Modifications from public and private review; extending public review period.
 - Added UriRecordNormalizer::normalizeUri().
 
 - Added UriRecordResolver::resolveUri().
-
 
 ## 1.0.0-alpha2
 
