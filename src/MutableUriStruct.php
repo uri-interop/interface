@@ -7,7 +7,7 @@ namespace UriInterop\Interface;
  * Implementations MUST keep `$query` and `$queryParams` in sync; if one is
  * modified, the other MUST be modified accordingly.
  */
-interface MutableUriRecord extends UriRecord
+interface MutableUriStruct extends UriStruct
 {
     /**
      * @inheritdoc

@@ -13,24 +13,24 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 Uri-Interop defines separate interfaces to afford reading and modifying a record of URI component values:
 
-- [_UriRecord_][] affords reading of the component values and recomposing them into a string.
-- [_MutableUriRecord_][] extends [_UriRecord_][] to afford direct modification of component values.
-- [_ImmutableUriRecord_][] extends [_UriRecord_][] to afford immutable modification of component values.
+- [_UriStruct_][] affords reading of the component values and recomposing them into a string.
+- [_MutableUriStruct_][] extends [_UriStruct_][] to afford direct modification of component values.
+- [_ImmutableUriStruct_][] extends [_UriStruct_][] to afford immutable modification of component values.
 
 Uri-Interop also defines interfaces for creating new URI instances:
 
-- [_UriRecordFactory_][] affords creating a [_UriRecord_][] instance from URI component values.
-- [_UriRecordNormalizer_][] affords creating a normalized instance of a [_UriRecord_][].
-- [_UriRecordResolver_][] affords creating a [_UriRecord_][] from a pair of base and relative [_UriRecord_][]s.
-- [_UriStringParser_][] affords creating a [_UriRecord_][] instance from a URI string.
+- [_UriStructFactory_][] affords creating a [_UriStruct_][] instance from URI component values.
+- [_UriStructNormalizer_][] affords creating a normalized instance of a [_UriStruct_][].
+- [_UriStructResolver_][] affords creating a [_UriStruct_][] from a pair of base and relative [_UriStruct_][]s.
+- [_UriStringParser_][] affords creating a [_UriStruct_][] instance from a URI string.
 
 Uri-Interop defines a marker interface, [_UriThrowable_][], for marking an [_Exception_][] as URI-related.
 
 Finally, Uri-Interop defines an interface of PHPStan type aliases, [_UriTypeAliases_][], to aid static analysis.
 
-### _UriRecord_
+### _UriStruct_
 
-The [_UriRecord_][] interface affords readability and recomposition of URI components using these properties and methods:
+The [_UriStruct_][] interface affords readability and recomposition of URI components using these properties and methods:
 
 - `?string $scheme { get; }`
     - The scheme component value (e.g., `https` or `urn`); does not include the `:` separator.
@@ -86,9 +86,9 @@ Notes:
 
 - **The query component is a `composed_string`.** Emulating a form submission might require using form-url-encoded values, so the query component may be composed of form-url-encoded values or percent-encoded values.
 
-### _MutableUriRecord_
+### _MutableUriStruct_
 
-The [_MutableUriRecord_][] interface extends [_UriRecord_][] to define these property set hooks:
+The [_MutableUriStruct_][] interface extends [_UriStruct_][] to define these property set hooks:
 
 - `?string $scheme { get; set; }`
 - `?percent_encoded_string $host { get; set; }`
@@ -108,46 +108,46 @@ Notes:
 
 - **There are no property set hooks for `$userinfo` or `$authority`.** Because these are combined from other component values, they are not modified directly.
 
-### _ImmutableUriRecord_
+### _ImmutableUriStruct_
 
-The [_ImmutableUriRecord_][] interface extends [_UriRecord_][] to define these methods:
+The [_ImmutableUriStruct_][] interface extends [_UriStruct_][] to define these methods:
 
-- `withScheme(?string $scheme) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$scheme` value.
+- `withScheme(?string $scheme) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$scheme` value.
 
-- `withUsername(?percent_encoded_string $username) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$username` value.
+- `withUsername(?percent_encoded_string $username) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$username` value.
 
-- `withPassword(?percent_encoded_string $password) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$password` value.
+- `withPassword(?percent_encoded_string $password) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$password` value.
 
-- `withHost(?percent_encoded_string $host) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$host` value.
+- `withHost(?percent_encoded_string $host) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$host` value.
 
-- `withPort(?int $port) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$port` value.
+- `withPort(?int $port) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$port` value.
 
-- `withPath(percent_composed_string $path) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$path` value.
+- `withPath(percent_composed_string $path) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$path` value.
 
-- `withQuery(?composed_string $query) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$query` value.
+- `withQuery(?composed_string $query) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$query` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
-- `withFragment(?percent_composed_string $fragment) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$fragment` value.
+- `withFragment(?percent_composed_string $fragment) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$fragment` value.
 
-- `withQueryParams(?query_params_array $queryParams) : ImmutableUriRecord`
-    - Returns a new instance of the [_ImmutableUriRecord_][] with the modified `$queryParams` value.
+- `withQueryParams(?query_params_array $queryParams) : ImmutableUriStruct`
+    - Returns a new instance of the [_ImmutableUriStruct_][] with the modified `$queryParams` value.
     - Implementations MUST keep `$query` and `$queryParams` in sync; if one is modified, the other MUST be modified accordingly.
 
 Notes:
 
 - **There are no methods for `withUserInfo()` or `withAuthority()`.** Because these are combined from other property values, they are not modified directly.
 
-### _UriRecordFactory_
+### _UriStructFactory_
 
-The [_UriRecordFactory_][] interface affords creating a new [_UriRecord_][] instance from parsed component values:
+The [_UriStructFactory_][] interface affords creating a new [_UriStruct_][] instance from parsed component values:
 
 -
     ```php
@@ -160,42 +160,42 @@ The [_UriRecordFactory_][] interface affords creating a new [_UriRecord_][] inst
         percent_composed_string $path = '',
         ?composed_string $query = null,
         ?percent_composed_string $fragment = null,
-    ) : UriRecord
+    ) : UriStruct
     ```
 
-### _UriRecordNormalizer_
+### _UriStructNormalizer_
 
-The [_UriRecordNormalizer_][] interface affords creating a normalized [_UriRecord_][] instance (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2>):
+The [_UriStructNormalizer_][] interface affords creating a normalized [_UriStruct_][] instance (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2>):
 
 -
     ```php
-    normalizeUri(UriRecord $uri) : UriRecord
+    normalizeUri(UriStruct $uri) : UriStruct
     ```
 
-Implementations of `normalizeUri()` MUST return a new instance of [_UriRecord_][].
+Implementations of `normalizeUri()` MUST return a new instance of [_UriStruct_][].
 
 
-### _UriRecordResolver_
+### _UriStructResolver_
 
-The [_UriRecordResolver_][] interface affords creating a new [_UriRecord_][] instance by resolving a relative URI reference against a base URI (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-5>):
+The [_UriStructResolver_][] interface affords creating a new [_UriStruct_][] instance by resolving a relative URI reference against a base URI (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-5>):
 
 -
     ```php
-    resolveUri(UriRecord $relative, UriRecord $base) : UriRecord
+    resolveUri(UriStruct $relative, UriStruct $base) : UriStruct
     ```
 
-Implementations of `resolveUri()` MUST return a new instance of [_UriRecord_][].
+Implementations of `resolveUri()` MUST return a new instance of [_UriStruct_][].
 
 
 ### _UriStringParser_
 
-The [_UriStringParser_][] interface affords creating a new [_UriRecord_][] instance from a URI string:
+The [_UriStringParser_][] interface affords creating a new [_UriStruct_][] instance from a URI string:
 
-- `parseUri(string|Stringable $uriString) : UriRecord`
+- `parseUri(string|Stringable $uriString) : UriStruct`
 
 Notes:
 
-- **The parser returns a new [_UriRecord_][] instance instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
+- **The parser returns a new [_UriStruct_][] instance instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
 
 - **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using an [RFC 3986][]-compliant approach instead.
 
@@ -291,25 +291,25 @@ Earlier drafts of these standard interfaces included a [WHATWG-URL][] marker. Ho
 
 Despite this, [WHATWG-URL][] does have some overlap with [RFC 3986][], and thus continues to inform Uri-Interop.
 
-### Why is there no `UriRecord::normalize()` interface method?
+### Why is there no `UriStruct::normalize()` interface method?
 
-Although a [_UriRecordNormalizer_][] is provided to afford normalizing any [_UriRecord_][], there is no interface that affords something like a `normalize()` method directly on a [_UriRecord_][]. Reviewers preferred being able to specify normalization logic independent from any particular [_UriRecord_][] implementation, especially when normalizing URIs from different implementors to compare them for equivalence.
+Although a [_UriStructNormalizer_][] is provided to afford normalizing any [_UriStruct_][], there is no interface that affords something like a `normalize()` method directly on a [_UriStruct_][]. Reviewers preferred being able to specify normalization logic independent from any particular [_UriStruct_][] implementation, especially when normalizing URIs from different implementors to compare them for equivalence.
 
-### Why is there no `UriRecord::resolve()` interface method?
+### Why is there no `UriStruct::resolve()` interface method?
 
-Although a [_UriRecordResolver_] is provided to afford resolving relative URI reference, there is no interface that affords something like a `resolve()` method directly on a [_UriRecord_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriRecord_][] implementation.
+Although a [_UriStructResolver_] is provided to afford resolving relative URI reference, there is no interface that affords something like a `resolve()` method directly on a [_UriStruct_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriStruct_][] implementation.
 
 
 * * *
 
 [_Exception_]: https://php.net/Exception
-[_ImmutableUriRecord_]: #immutableurirecord
-[_MutableUriRecord_]: #mutableurirecord
+[_ImmutableUriStruct_]: #immutableUriStruct
+[_MutableUriStruct_]: #mutableUriStruct
 [_Throwable_]: https://php.net/Throwable
-[_UriRecord_]: #urirecord
-[_UriRecordFactory_]: #urirecordfactory
-[_UriRecordNormalizer_]: #urirecordnormalizer
-[_UriRecordResolver_]: #urirecordresolver
+[_UriStruct_]: #UriStruct
+[_UriStructFactory_]: #UriStructfactory
+[_UriStructNormalizer_]: #UriStructnormalizer
+[_UriStructResolver_]: #UriStructresolver
 [_UriStringParser_]: #uristringparser
 [_UriThrowable_]: #urithrowable
 [_UriTypeAliases_]: #uritypealiases
