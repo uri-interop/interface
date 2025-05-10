@@ -165,39 +165,48 @@ The [_UriStructFactory_][] interface affords creating a new [_UriStruct_][] inst
 
 ### _UriStructNormalizer_
 
-The [_UriStructNormalizer_][] interface affords creating a normalized [_UriStruct_][] instance (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2>):
+The [_UriStructNormalizer_][] interface affords creating a [_UriStruct_][] instance with [normalized component values][].
 
 -
     ```php
     normalizeUri(UriStruct $uri) : UriStruct
     ```
 
-Implementations of `normalizeUri()` MUST return a new instance of [_UriStruct_][].
+Implementations MUST apply [syntax-based normalization][] and MAY apply one or more additional normalizations (e.g. [scheme-based normalization][] or [protocol-based normalization][]).
 
+Implementations MUST return a new instance of [_UriStruct_][].
 
 ### _UriStructResolver_
 
-The [_UriStructResolver_][] interface affords creating a new [_UriStruct_][] instance by resolving a relative URI reference against a base URI (cf. <https://datatracker.ietf.org/doc/html/rfc3986/#section-5>):
+The [_UriStructResolver_][] interface affords creating a new [_UriStruct_][] instance by resolving a relative URI reference against a base URI:
 
 -
     ```php
     resolveUri(UriStruct $relative, UriStruct $base) : UriStruct
     ```
 
-Implementations of `resolveUri()` MUST return a new instance of [_UriStruct_][].
+Implementations MUST apply the algorithm desribed in [RFC 3986 Relative Resolution][].
 
+Implementations MUST return a new instance of [_UriStruct_][].
+
+Implementations MAY [normalize component values][] in the returned instance (e.g. by applying [syntax-based normalization][], [scheme-based normalization][], [protocol-based normalization][], etc.).
 
 ### _UriStringParser_
 
 The [_UriStringParser_][] interface affords creating a new [_UriStruct_][] instance from a URI string:
 
-- `parseUri(string|Stringable $uriString) : UriStruct`
+-
+    ```php
+    parseUri(string|Stringable $uriString) : UriStruct
+    ```
+
+Implementations SHOULD use the [RFC 3986 parsing algorithm][].
 
 Notes:
 
 - **The parser returns a new [_UriStruct_][] instance instead of an array of component values.** This reduces the number of steps involved in creating a new instance.
 
-- **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using an [RFC 3986][]-compliant approach instead.
+- **The native [`parse_url()`][] PHP function is not strictly [RFC 3986][] compliant.** Using [`parse_url()`][] may be fine for many cases, but implementations should consider using the [RFC 3986][]-compliant approach instead.
 
 ### _UriThrowable_
 
@@ -249,6 +258,8 @@ Notes:
 
 Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
+Implementations MAY [normalize component values][].
+
 Implementations MAY validate component values; the implementation MUST throw a [_UriThrowable_][] when a component value is invalid.
 
 Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
@@ -297,7 +308,7 @@ Although a [_UriStructNormalizer_][] is provided to afford normalizing any [_Uri
 
 ### Why is there no `UriStruct::resolve()` interface method?
 
-Although a [_UriStructResolver_] is provided to afford resolving relative URI reference, there is no interface that affords something like a `resolve()` method directly on a [_UriStruct_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriStruct_][] implementation.
+Although a [_UriStructResolver_] is provided to afford resolving relative URI references, there is no interface that affords something like a `resolve()` method directly on a [_UriStruct_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriStruct_][] implementation.
 
 
 * * *
@@ -306,11 +317,11 @@ Although a [_UriStructResolver_] is provided to afford resolving relative URI re
 [_ImmutableUriStruct_]: #immutableUriStruct
 [_MutableUriStruct_]: #mutableUriStruct
 [_Throwable_]: https://php.net/Throwable
+[_UriStringParser_]: #uristringparser
 [_UriStruct_]: #UriStruct
 [_UriStructFactory_]: #UriStructfactory
 [_UriStructNormalizer_]: #UriStructnormalizer
 [_UriStructResolver_]: #UriStructresolver
-[_UriStringParser_]: #uristringparser
 [_UriThrowable_]: #urithrowable
 [_UriTypeAliases_]: #uritypealiases
 [`http_build_query()`]: https://php.net/http_build_query
@@ -321,9 +332,16 @@ Although a [_UriStructResolver_] is provided to afford resolving relative URI re
 [`urldecode()`]: https://php.net/urldecode
 [`urlencode()`]: https://php.net/urlencode
 [BCP 14]: https://www.rfc-editor.org/info/bcp14
+[normalize component values]: https://datatracker.ietf.org/doc/html/rfc3986/#section-6
+[normalized component values]: https://datatracker.ietf.org/doc/html/rfc3986/#section-6
+[protocol-based normalization]: https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.4
 [README-RESEARCH.md]: ./README-RESEARCH.md
 [RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119.txt
+[RFC 3986 parsing algorithm]: https://datatracker.ietf.org/doc/html/rfc3986/#appendix-B
+[RFC 3986 Relative Resolution]: https://datatracker.ietf.org/doc/html/rfc3986/#section-5.2
 [RFC 3986]: https://datatracker.ietf.org/doc/html/rfc3986/
 [RFC 3987]: https://datatracker.ietf.org/doc/html/rfc3987/
 [RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174.txt
+[scheme-based normalization]: https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.3
+[syntax-based normalization]: https://datatracker.ietf.org/doc/html/rfc3986/#section-6.2.2
 [WHATWG-URL]: https://url.spec.whatwg.org/
