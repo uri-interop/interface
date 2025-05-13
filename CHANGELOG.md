@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0-beta2
+
+- Implementation normalization requirements and recommendations.
+
+- Resolution requirements and recommendations.
+
 ## 1.0.0-beta1
 
 - Renamed interfaces from UriRecord to UriStruct, reducing ease-of-confusion with WHATWG-URL UrlRecord implementations.
