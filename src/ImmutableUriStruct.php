@@ -37,7 +37,7 @@ interface ImmutableUriStruct extends UriStruct
      * Returns a new instance of the _ImmutableUri_ with the modified `$host`
      * value.
      *
-     * @param ?percent_encoded_string $host
+     * @param ?percent_composed_string $host
      */
     public function withHost(?string $host) : ImmutableUriStruct;
 

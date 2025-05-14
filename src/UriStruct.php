@@ -53,7 +53,7 @@ interface UriStruct extends Stringable
      * Implementations MUST report this value as `null` if the host component
      * is not present.
      *
-     * @var ?percent_encoded_string
+     * @var ?percent_composed_string
      */
     public ?string $host { get; }
 

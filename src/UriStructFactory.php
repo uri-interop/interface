@@ -13,7 +13,7 @@ interface UriStructFactory
     /**
      * @param ?percent_encoded_string $username
      * @param ?percent_encoded_string $password
-     * @param ?percent_encoded_string $host
+     * @param ?percent_composed_string $host
      * @param percent_composed_string $path
      * @param ?composed_string $query
      * @param ?percent_composed_string $fragment

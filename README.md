@@ -44,7 +44,7 @@ The [_UriStruct_][] interface affords readability and recomposition of URI compo
     - The password component value.
     - Implementations MUST report this value as `null` if the password component is not present.
 
-- `?percent_encoded_string $host { get; }`
+- `?percent_composed_string $host { get; }`
     - The host component value (e.g. `www.example.net`, `127.0.0.1`, `[::1]`, and so on).
     - Implementations MUST report this value as `null` if the host component is not present.
 
