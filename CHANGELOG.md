@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.0-beta3
+
+- The host component is now typed as a composed string, not an merely an encoded one.
+
 ## 1.0.0-beta2
 
 - Implementation normalization requirements and recommendations.
