@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.0-beta4
+
+- BC break: from resolveUri($relative, $base) to resolveUri ($base, $relative), based on a note from one reviewer who pointed out that the (very few) research examples uses that order
+
 ## 1.0.0-beta3
 
 - The host component is now typed as a composed string, not an merely an encoded one.
