@@ -182,7 +182,7 @@ The [_UriStructResolver_][] interface affords creating a new [_UriStruct_][] ins
 
 -
     ```php
-    resolveUri(UriStruct $relative, UriStruct $base) : UriStruct
+    resolveUri(UriStruct $base, UriStruct $relative) : UriStruct
     ```
 
 Implementations MUST apply the algorithm desribed in [RFC 3986 Relative Resolution][].

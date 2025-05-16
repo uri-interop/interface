@@ -6,7 +6,7 @@ namespace UriInterop\Interface;
 interface UriStructResolver
 {
     public function resolveUri(
-        UriStruct $relative,
         UriStruct $base,
+        UriStruct $relative,
     ) : UriStruct;
 }
