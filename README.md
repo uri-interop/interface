@@ -3,7 +3,7 @@
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat-square)](https://github.com/php-pds/skeleton)
 [![PDS Composer Script Names](https://img.shields.io/badge/pds-composer--script--names-blue?style=flat-square)](https://github.com/php-pds/composer-script-names)
 
-Uri-Interop publishes a standard set of interoperable URI interfaces for PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
+Uri-Interop provides an interoperable package of standard interfaces for working with URIs in PHP 8.4+. It reflects, refines, and reconciles the common practices identified within [several pre-existing projects][README-RESEARCH.md].
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14][] ([RFC 2119][], [RFC 8174][]).
 
@@ -77,6 +77,12 @@ The [_UriStruct_][] interface affords readability and recomposition of URI compo
 
 - `__toString() : composed_string`
     - Composes the component values into a full URI string.
+
+Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
+
+Implementations MAY [normalize component values][].
+
+Implementations MAY validate component values; the implementation MUST throw a [_UriThrowable_][] when a component value is invalid.
 
 Notes:
 
@@ -256,12 +262,6 @@ Notes:
 
 ## Implementations
 
-Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
-
-Implementations MAY [normalize component values][].
-
-Implementations MAY validate component values; the implementation MUST throw a [_UriThrowable_][] when a component value is invalid.
-
 Implementations advertised as readonly or immutable MUST be deeply readonly or immutable; they MUST NOT encapsulate any references, resources, mutable objects, objects or arrays encapsulating references or resources or mutable objects, and so on.
 
 Implementations MAY define additional class members not defined in these interfaces; implementations advertised as readonly or immutable MUST make those additional class members deeply readonly or immutable.
@@ -309,7 +309,6 @@ Although a [_UriStructNormalizer_][] is provided to afford normalizing any [_Uri
 ### Why is there no `UriStruct::resolve()` interface method?
 
 Although a [_UriStructResolver_] is provided to afford resolving relative URI references, there is no interface that affords something like a `resolve()` method directly on a [_UriStruct_][]. As with normalization, reviewers preferred being able to specify resolution logic independent from any particular [_UriStruct_][] implementation.
-
 
 * * *
 
