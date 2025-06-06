@@ -11,7 +11,7 @@ use Stringable;
  * Implementations MAY normalize component values.
  *
  * Implementations MAY validate component values; the implementation MUST throw
- * a _UriThrowable_ when a component value is invalid.
+ * a UriThrowable when a component value is invalid.
  *
  * @phpstan-import-type composed_string from UriTypeAliases
  * @phpstan-import-type percent_composed_string from UriTypeAliases
