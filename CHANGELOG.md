@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.0
+
+First stable release.
+
 ## 1.0.0-beta4
 
 - BC break: from resolveUri($relative, $base) to resolveUri ($base, $relative), based on a note from one reviewer who pointed out that the (very few) research examples uses that order
