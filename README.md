@@ -82,7 +82,7 @@ Implementations MAY sanitize component values (e.g. by applying [`trim()`][]).
 
 Implementations MAY [normalize component values][].
 
-Implementations MAY validate component values; the implementation MUST throw a [_UriThrowable_][] when a component value is invalid.
+Implementations MAY validate component values; implementations doing so MUST throw a [_UriThrowable_][] when a component value is invalid.
 
 Notes:
 
