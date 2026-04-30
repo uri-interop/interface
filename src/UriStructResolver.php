@@ -15,8 +15,5 @@ interface UriStructResolver
      * (e.g. by applying syntax-based normalization, scheme-based normalization,
      * protocol-based normalization, etc.).
      */
-    public function resolveUri(
-        UriStruct $base,
-        UriStruct $relative,
-    ) : UriStruct;
+    public function resolveUri(UriStruct $base, UriStruct $relative) : UriStruct;
 }

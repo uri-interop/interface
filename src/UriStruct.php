@@ -126,7 +126,7 @@ interface UriStruct extends Stringable
      *
      * @var ?percent_composed_string
      */
-    public ?string $authority  { get; }
+    public ?string $authority { get; }
 
     /**
      * Composes the component values into a full URI string.
