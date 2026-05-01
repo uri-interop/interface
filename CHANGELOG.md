@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.0.1
+
+Documentation and tooling only; normative intent and meaning are unchanged from 1.0.0.
+
+- Adopt stardoc for README generation; rewrite docblocks in narrative voice.
+
+- Restructure README interface sections with explicit Properties and Methods subsections.
+
+- Mark `UriThrowable` as a marker interface, matching the family pattern.
+
+- Editorial: align `$host` parameter type to `percent_composed_string` consistently with the `UriStruct` getter (1.0.0 README inconsistently declared `?percent_encoded_string` in setter contexts); minor typo fixes; update RFC reference URLs to `datatracker.ietf.org`.
+
 ## 1.0.0
 
 First stable release.
