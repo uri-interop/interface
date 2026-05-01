@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace UriInterop\Interface;
 
 /**
+ * [_UriStructFactory_][] affords creating a new [_UriStruct_][] instance
+ * from parsed component values.
+ *
  * @phpstan-import-type composed_string from UriTypeAliases
  * @phpstan-import-type percent_composed_string from UriTypeAliases
  * @phpstan-import-type percent_encoded_string from UriTypeAliases
@@ -11,6 +14,8 @@ namespace UriInterop\Interface;
 interface UriStructFactory
 {
     /**
+     * Creates a new [_UriStruct_][] instance from the given component values.
+     *
      * @param ?percent_encoded_string $username
      * @param ?percent_encoded_string $password
      * @param ?percent_composed_string $host
