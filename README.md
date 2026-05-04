@@ -16,7 +16,7 @@ This package attempts to adhere to the [Package Development Standards](https://p
 
 ## Interfaces
 
-Uri-Interop defines the following interfaces:
+This package defines the following interfaces:
 
 - [_UriStruct_][] affords reading of URI component values and recomposing them into a string.
 
